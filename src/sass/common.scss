@@ -1,0 +1,178 @@
+/*盒子特性*/
+
+@mixin box-sizing ($sizing) {
+  -webkit-box-sizing: $sizing;
+  -moz-box-sizing: $sizing;
+  box-sizing: $sizing;
+}
+
+//css3 2d变换
+@mixin transform($tf) {
+  -webkit-transform: $tf;
+  -moz-transform: $tf;
+  -ms-transform: $tf;
+  transform: $tf;
+}
+
+//css3 过渡
+@mixin transition($ts) {
+  -webkit-transition: $ts;
+  -moz-transition: $ts;
+  -ms-transition: $ts;
+  transition: $ts;
+}
+
+//弹性布局flex
+@mixin flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flex-1 {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+@mixin user-select($us) {
+  -moz-user-select: $us;
+  /*火狐*/
+  -webkit-user-select: $us;
+  /*webkit浏览器*/
+  -ms-user-select: $us;
+  /*IE10*/
+  -khtml-user-select: $us;
+  /*早期浏览器*/
+  user-select: $us;
+}
+
+// 毛玻璃效果
+@mixin filter($val) {
+  -webkit-filter: blur($val);
+  -moz-filter: blur($val);
+  -ms-filter: blur($val);
+  filter: blur($val);
+}
+
+//制定动画
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+//动画调用如下
+
+/*
+@include keyframes(move-the-object) {
+    0%   { 
+        transform: translateX(0);
+    }
+    100% { 
+        transform: translateX(200px); 
+    }
+}
+*/
+
+// 执行动画
+@mixin animate($val) {
+  -webkit-animation: $val;
+  animation: $val;
+}
+
+// 暂停动画
+@mixin animation-play-state($val) {
+  -webkit-animation-play-state: $val;
+  animation-play-state: $val;
+}
+
+@mixin ellipses {
+  text-overflow: ellipsis;
+  overflow: hidden; // white-space:nowrap;  
+}
+
+// 修改滚动条样式
+@mixin scrollBar ($boxColor,$barColor){
+   ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background-color: $barColor;
+    -webkit-border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:vertical {
+    height: 5px;
+    background-color: $boxColor;
+    -webkit-border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:horizontal {
+    width: 5px;
+    background-color: $barColor;
+    -webkit-border-radius: 6px;
+  }
+}
+
+$fontColor:#333;
+$Blue:#20A0FF;
+$LightBlue:#58B7FF;
+$DarkBlue:#1D8CE0;
+$DarkWhite:#F6F8F8;
+$Danger:#FF4949;
+$Warning:#F7BA2A;
+$Success:#13CE66;
+$Black:#1F2D3D;
+$LightBlack:#324057;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "微软雅黑", 'sans-serif'; // color: $fontColor;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  body {
+    font-size: 14px;
+    button,
+    input {
+      -webkit-appearance: none;
+      outline: none;
+    }
+    ol,
+    ul {
+      list-style: none;
+    }
+    a,
+    a:hover,
+    a:focus {
+      text-decoration: none;
+      color: $fontColor;
+      outline: none;
+    }
+    em,
+    i {
+      font-style: normal;
+    }
+    .imgbox{
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
