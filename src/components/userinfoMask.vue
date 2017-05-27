@@ -1,5 +1,5 @@
 <template>
-    <div class="useinfoMask" :class="{'open':!openStatus}">
+    <div class="useinfoMask" :class="{'open':openStatus}">
         <div class="info">
             <p>姓名：赵日天</p>
             <p>性别：男</p>
