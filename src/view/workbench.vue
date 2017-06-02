@@ -50,7 +50,7 @@
         </header>
         <div class="container" :class="{'close':menuCompressionStatus}">
             <div class="navMenu">
-                <el-menu theme="dark" :unique-opened="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+                <el-menu theme="dark" :unique-opened="true" :router="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
                     <el-menu-item-group title="常用功能">
                         <el-submenu index="1">
                             <template slot="title">
@@ -67,7 +67,7 @@
                         <el-submenu index="3">
                             <template slot="title">
                                 <i class="el-icon-star-on"></i>评估管理</template>
-                            <el-menu-item index="3-1">选项1</el-menu-item>
+                            <el-menu-item index="/dailywork/checkinManagement" >入住评估</el-menu-item>
                         </el-submenu>
                         <el-submenu index="4">
                             <template slot="title">
@@ -109,7 +109,7 @@
                         <el-breadcrumb-item>活动详情</el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
-                <!--<router-view></router-view>-->
+                <router-view></router-view>
             </div>
         </div>
     </div>
@@ -307,7 +307,9 @@ $header-width:200px;
         z-index: 2;
         .breadcrumb{
             width: 100%;
-            padding: 15px;
+            padding: 20px;
+            background: #F6F8F8;
+            border-bottom:1px solid #DEE5E7; 
         }
     }
 }
