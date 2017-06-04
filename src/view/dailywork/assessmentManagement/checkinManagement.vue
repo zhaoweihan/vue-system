@@ -6,17 +6,23 @@
         <!--筛选-->
         <div class="operateArea">
           <el-input size="small" placeholder="预祝人员姓名" v-model="name"></el-input>
-          <el-input size="small" placeholder="证件号码" v-model="idNumber" ></el-input>
+          <el-input size="small" placeholder="证件号码" v-model="idNumber"></el-input>
           <el-button type="primary" icon="search" size="small" @click="select()">查询</el-button>
           <el-button type="danger" icon="delete2" size="small" @click="empty()">清空</el-button>
+          <div class="rightArea">
+            <router-link to="/dailywork/checkinEdit/0">
+              <el-button type="primary" icon="plus"></el-button>
+            </router-link>
+          </div>
+  
         </div>
         <!--表格-->
         <el-table :data="tableData" :stripe="true">
-          <el-table-column prop="num" label="序号"></el-table-column>
+          <el-table-column prop="num" label="序号" width="70"></el-table-column>
           <el-table-column prop="name" label="预住人员姓名"></el-table-column>
-          <el-table-column prop="gender" label="性别"></el-table-column>
-          <el-table-column prop="age" label="年龄"></el-table-column>
-          <el-table-column prop="idNumber" label="身份证号"></el-table-column>
+          <el-table-column prop="gender" label="性别" width="70"></el-table-column>
+          <el-table-column prop="age" label="年龄" width="70"></el-table-column>
+          <el-table-column prop="idNumber" label="身份证号" width="186"></el-table-column>
           <el-table-column prop="reservateTime" label="预约时间"></el-table-column>
           <el-table-column prop="contactPerson" label="联系人"></el-table-column>
           <el-table-column prop="phoneNum" label="联系电话"></el-table-column>
@@ -34,22 +40,21 @@
   </div>
 </template>
 <script>
-import {servers} from '../../../api'
+import { servers } from '../../../api'
 export default {
   data() {
     return {
       tabsActiveName: "first",
       tableData: [],//表格数据
-      idNumber:"",//筛选条件：身份证号
-      name:""//筛选条件：预住人员姓名
+      idNumber: "",//筛选条件：身份证号
+      name: ""//筛选条件：预住人员姓名
     }
   },
   methods: {
     _init() {
-      // console.log(servers.getTableData())
-        servers.get('/tableList',(result)=>{
+      servers.post('/tableList', (result) => {
         this.tableData = result.data.list
-       });
+      });
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -72,26 +77,26 @@ export default {
       }).catch(() => { });
     },
     // 查询
-    select(){
-      if(this.name!=""||this.idNumber!=""){
-          if(this.name!=""){//名字
-            let arr=[];
-            this.tableData.forEach(function(element) {
-              if(element.name.indexOf(this.name)>-1){
-                  arr.push(element);
-              }
-            }, this);
-            this.tableData=arr;
-          }else if(this.idNumber!=""){
+    select() {
+      if (this.name != "" || this.idNumber != "") {
+        if (this.name != "") {//名字
+          let arr = [];
+          this.tableData.forEach(function (element) {
+            if (element.name.indexOf(this.name) > -1) {
+              arr.push(element);
+            }
+          }, this);
+          this.tableData = arr;
+        } else if (this.idNumber != "") {
 
-          }
-      }else{
+        }
+      } else {
 
       }
-      
+
     },
     // 清空查询
-    empty(){
+    empty() {
 
     }
   },
@@ -104,15 +109,18 @@ export default {
 @import '../../../sass/common';
 .view-container {
   padding: 10px 20px 10px 20px;
-  .operateArea{
+  .operateArea {
     margin-bottom: 15px;
     border: 1px solid #E5E9F2;
     padding: 15px;
     background: #EFF2F7;
     border-radius: 5px;
-    .el-input{
+    .el-input {
       width: 180px;
       display: inline-block;
+    }
+    .rightArea {
+      float: right;
     }
   }
 }

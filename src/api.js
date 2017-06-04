@@ -6,7 +6,7 @@
  */
 import Vue from 'vue';
 import axios from 'axios';
-const baseUrl = 'http://localhost:3000'; //192.168.102.63 | 192.168.1.106 | 47.93.249.147 | https://zwh.natapp4.cc
+const baseUrl = 'http://localhost:3001'; //192.168.102.63 | 192.168.1.106 | 47.93.249.147 | https://zwh.natapp4.cc
 export const servers = {
   /**
    * get请求
