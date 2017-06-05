@@ -55,10 +55,8 @@ export default {
       console.log(tab, event);
     },
     handleEdit(index, row) {
-      console.log(index, row);
     },
     handleDelete(index, row) {
-      console.log(index, row);
       this.$confirm('确认删除此条信息?', '删除信息', {
         confirmButtonText: '朕恩准了',
         cancelButtonText: '容朕三思',
