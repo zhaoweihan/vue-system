@@ -5,12 +5,12 @@
       <el-tab-pane label="初评" name="first">
         <!--筛选-->
         <div class="operateArea">
-          <el-input size="small" placeholder="预祝人员姓名" v-model="name"></el-input>
+          <el-input size="small" placeholder="预祝人员姓名" v-model="selectName"></el-input>
           <el-input size="small" placeholder="证件号码" v-model="idNumber"></el-input>
           <el-button type="primary" icon="search" size="small" @click="select()">查询</el-button>
           <el-button type="danger" icon="delete2" size="small" @click="empty()">清空</el-button>
           <div class="rightArea">
-            <router-link to="/dailywork/checkinEdit/0">
+            <router-link to="/dailywork/checkinEdit/add">
               <el-button type="primary" icon="plus"></el-button>
             </router-link>
           </div>
@@ -18,7 +18,7 @@
         </div>
         <!--表格-->
         <el-table :data="tableData" :stripe="true">
-          <el-table-column prop="num" label="序号" width="70"></el-table-column>
+          <el-table-column type="index" label="序号" width="70"></el-table-column>
           <el-table-column prop="name" label="预住人员姓名"></el-table-column>
           <el-table-column prop="gender" label="性别" width="70"></el-table-column>
           <el-table-column prop="age" label="年龄" width="70"></el-table-column>
@@ -33,6 +33,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination  @current-change="handleCurrentChange" :current-page="currentPage1"  :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
+        </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="面评" name="second"></el-tab-pane>
     </el-tabs>
@@ -47,19 +49,27 @@ export default {
       tabsActiveName: "first",
       tableData: [],//表格数据
       idNumber: "",//筛选条件：身份证号
-      name: ""//筛选条件：预住人员姓名
+      selectName: ""//筛选条件：预住人员姓名
     }
   },
   methods: {
     _init() {
-      servers.post('/tableList', (result) => {
-        this.tableData = result.data.list
-      });
+      // servers.post('/tableList', (result) => {
+      //   this.tableData = result.data.list
+      // });
+      if (localStorage.getItem("tableData")) {
+        let tableData = JSON.parse(localStorage.getItem("tableData"));
+        tableData.forEach((ele) => {
+          ele.reservateTime = ele.reservateTime.split("T")[0];
+        })
+        this.tableData = tableData;
+      }
     },
     handleClick(tab, event) {
       console.log(tab, event);
     },
     handleEdit(index, row) {
+      this.$router.push('/dailywork/checkinEdit/' + index);
     },
     handleDelete(index, row) {
       this.$confirm('确认删除此条信息?', '删除信息', {
@@ -67,7 +77,10 @@ export default {
         cancelButtonText: '容朕三思',
         type: 'warning'
       }).then(() => {
+        let tableData = JSON.parse(localStorage.getItem("tableData"));
         this.tableData.splice(index, 1);
+        tableData.splice(index, 1);
+        localStorage.setItem("tableData", JSON.stringify(tableData));
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -76,11 +89,11 @@ export default {
     },
     // 查询
     select() {
-      if (this.name != "" || this.idNumber != "") {
-        if (this.name != "") {//名字
+      if (this.selectName != "" || this.idNumber != "") {
+        if (this.selectName != "") {//名字
           let arr = [];
           this.tableData.forEach(function (element) {
-            if (element.name.indexOf(this.name) > -1) {
+            if (element.name.indexOf(this.selectName) > -1) {
               arr.push(element);
             }
           }, this);
@@ -89,13 +102,15 @@ export default {
 
         }
       } else {
-
+        this.tableData = JSON.parse(localStorage.getItem("tableData"));
       }
 
     },
     // 清空查询
     empty() {
-
+      this.selectName = '';
+      this.idNumber = '';
+      this.tableData = JSON.parse(localStorage.getItem("tableData"));
     }
   },
   created() {
@@ -120,6 +135,9 @@ export default {
     .rightArea {
       float: right;
     }
+  }
+  .el-pagination{
+    margin-top: 15px;
   }
 }
 </style>
