@@ -67,7 +67,7 @@
                         <el-submenu index="3">
                             <template slot="title">
                                 <i class="el-icon-star-on"></i>评估管理</template>
-                            <el-menu-item index="/dailywork/checkinManagement" >入住评估</el-menu-item>
+                            <el-menu-item index="/dailywork/checkinManagement">入住评估</el-menu-item>
                         </el-submenu>
                         <el-submenu index="4">
                             <template slot="title">
@@ -165,6 +165,21 @@ export default {
         },
         handleClose(key, keyPath) {
             // console.log(key, keyPath);
+        }
+    },
+    created() {
+        const self=this;
+        if (!localStorage.getItem("mobile")) {
+            this.$message.error('会话过期，登录失效，请重新登录！');
+            this.$message({
+                message: '会话过期，登录失效，请重新登录！',
+                type: 'error',
+                duration: 1000,
+                onClose() {
+                    self.$router.push('/login');
+                }
+            });
+
         }
     },
     components: { userinfmask }
@@ -305,11 +320,11 @@ $header-width:200px;
         overflow-x: hidden;
         overflow-y: auto;
         z-index: 2;
-        .breadcrumb{
+        .breadcrumb {
             width: 100%;
             padding: 20px;
             background: #F6F8F8;
-            border-bottom:1px solid #DEE5E7; 
+            border-bottom: 1px solid #DEE5E7;
         }
     }
 }

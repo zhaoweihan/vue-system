@@ -33,7 +33,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination  @current-change="handleCurrentChange" :current-page="currentPage1"  :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
+        <el-pagination  @current-change="handleCurrentChange()" :current-page="currentPage"  :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
         </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="面评" name="second"></el-tab-pane>
@@ -49,7 +49,8 @@ export default {
       tabsActiveName: "first",
       tableData: [],//表格数据
       idNumber: "",//筛选条件：身份证号
-      selectName: ""//筛选条件：预住人员姓名
+      selectName: "",//筛选条件：预住人员姓名
+      currentPage:1
     }
   },
   methods: {
@@ -65,12 +66,15 @@ export default {
         this.tableData = tableData;
       }
     },
+    // 切换tab
     handleClick(tab, event) {
       console.log(tab, event);
     },
+    // 编辑信息
     handleEdit(index, row) {
       this.$router.push('/dailywork/checkinEdit/' + index);
     },
+    // 删除信息
     handleDelete(index, row) {
       this.$confirm('确认删除此条信息?', '删除信息', {
         confirmButtonText: '朕恩准了',
@@ -111,6 +115,10 @@ export default {
       this.selectName = '';
       this.idNumber = '';
       this.tableData = JSON.parse(localStorage.getItem("tableData"));
+    },
+    // 切换分页
+    handleCurrentChange(){
+      
     }
   },
   created() {

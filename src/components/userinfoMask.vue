@@ -20,7 +20,7 @@
             </li>
         </ul>
         <ul class="useinfoMask-list logout">
-            <li>
+            <li @click="signOut()">
                 <a href="javascript:;">退出</a>
             </li>
         </ul>
@@ -30,26 +30,36 @@
 export default {
     data() {
         return {
-            msg:'用户信息弹层'
+            msg: '用户信息弹层'
         }
     },
-    props:['openStatus']
+    methods: {
+        signOut() {
+            this.$confirm('确定退出系统', '退出',{
+                type:"warning"
+            }).then(() => {
+                localStorage.removeItem("mobile");
+                this.$router.push('/login');
+            }).catch(() => {});
+        }
+    },
+    props: ['openStatus']
 }
 </script>
 <style scoped lang="scss">
 @import '../sass/common';
 .useinfoMask {
     $lightGaryBlue: #EDF1F2;
-    $maskwidth:200px;
+    $maskwidth: 200px;
     position: absolute;
-    right:  -$maskwidth;
+    right: -$maskwidth;
     top: 50px;
     width: $maskwidth;
     border: 1px solid #ccc;
     z-index: 10;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     @include transition(all .3s);
-    &.open{
+    &.open {
         right: 0;
     }
     .info {
