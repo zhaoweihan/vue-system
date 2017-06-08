@@ -1,0 +1,38 @@
+$box-width:400px;
+.loginBox {
+  position: absolute;
+  left: calc(50% - #{$box-width / 2});
+  top: calc(50% - 172px);
+  width: $box-width;
+  .title {
+    text-align: center;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  .loginBody {
+    box-shadow: 0 14px 45px rgba(0, 0, 0, .247059), 0 10px 18px rgba(0, 0, 0, .219608);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    .vcodeInput{
+        width: 175px;
+        float: left;
+        margin-right: 15px;
+    }
+    .vcodeBtn{
+        float: left;
+        width: 100px;
+    }
+    .submitBtn {
+      width: 100px;
+      &.loginBtn {
+        margin-left: calc(50% - 107px);
+      }
+    }
+    .findPw {
+      margin: 5px 0;
+      padding-left: 5px;
+    }
+  }
+}

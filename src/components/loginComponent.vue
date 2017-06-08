@@ -3,17 +3,17 @@
         <div class="title">欢迎登录</div>
         <div class="loginBody">
             <el-form ref="loginForm" :model="loginForm" :rules="rules">
-                <el-form-item label="账号" prop="account" label-width="54px">
+                <el-form-item label="手机号" prop="account" label-width="54px">
                     <el-input v-model.number="loginForm.account" placeholder="请输入手机号" :maxlength="11" type="tel"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password" label-width="54px">
-                    <el-input v-model="loginForm.password" placeholder="请输入密码" type="password"></el-input>
+                    <el-input v-model="loginForm.password" placeholder="请输入密码" :type="sayPwdStatus" :icon="sayPwdIcon" :on-icon-click="sayPwd"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="vCode" label-width="54px">
                     <el-input v-model.number="loginForm.vCode" placeholder="请输入验证码" :maxlength="6" type="tel"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="submitForm('loginForm')" class="submitBtn loginBtn" native-type="submit">登 录</el-button>
-                <el-button type="danger" class="submitBtn" native-type="button">注 册</el-button>
+                <el-button type="danger" class="submitBtn" native-type="button" @click="goRegister()">注 册</el-button>
                 <p class="findPw">
                     <a href="javascript:;">找回密码</a>
                 </p>
@@ -84,20 +84,31 @@ export default {
                 password: [{ validator: checkPassword, trigger: 'blur' }],
                 vCode: [{ validator: checkvCode, trigger: 'blur' }]
 
-            }
+            },
+            sayPwdStatus: 'password',
+            sayPwdIcon:'view'
         }
     },
     methods: {
+        sayPwd(ev) {
+            if (this.sayPwdStatus == 'password') {
+                this.sayPwdStatus = 'text'
+                this.sayPwdIcon='search'
+            } else {
+                this.sayPwdStatus = 'password'
+                this.sayPwdIcon='view'
+            }
+        },
         submitForm(formName) {
-            const self=this;
+            const self = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$message({
                         message: '恭喜你，登录成功',
                         type: 'success',
-                        duration:1000,
-                        onClose(){
-                            localStorage.setItem('mobile',self.loginForm.account);
+                        duration: 1000,
+                        onClose() {
+                            localStorage.setItem('mobile', self.loginForm.account);
                             self.$router.replace('/dailywork/checkinManagement');
                         }
                     });
@@ -107,39 +118,15 @@ export default {
                 }
             });
         },
+        // 去注册
+        goRegister(){
+             this.$emit('changeStatus', 0)
+        }
     }
 }
 </script>
 
 <style lang="scss">
-$box-height:400px;
-.loginBox {
-    position: absolute;
-    left: calc(50% - #{$box-height / 2});
-    top: calc(50% - 172px);
-    width: $box-height;
-    .title {
-        text-align: center;
-        font-size: 20px;
-        color: #fff;
-        margin-bottom: 15px;
-    }
-    .loginBody {
-        box-shadow: 0 14px 45px rgba(0, 0, 0, .247059), 0 10px 18px rgba(0, 0, 0, .219608);
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        .submitBtn {
-            width: 100px;
-            &.loginBtn {
-                margin-left: calc(50% - 107px);
-            }
-        }
-        .findPw {
-            margin: 5px 0;
-            padding-left: 5px;
-        }
-    }
-}
+    @import '../sass/loginCom'
 </style>
 
