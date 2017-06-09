@@ -18,7 +18,7 @@
                 </div>
                 <!--头像和名字-->
                 <div class="headPicBox">
-                    <span @click="openMask()">{{username}}
+                    <span @click="openMask()">{{nickname}}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <div class="imgbox" @click="openMask()">
@@ -101,12 +101,9 @@
                 </el-menu>
             </div>
             <div class="content">
-                <div class="breadcrumb">
+                <div class="breadcrumb" v-if="breadCrumbs.length">
                     <el-breadcrumb separator="/">
-                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                        <el-breadcrumb-item :to="{ path: bc.url }" v-for="(bc,$index) in breadCrumbs" :key="$index">{{bc.name}}</el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
                 <router-view></router-view>
@@ -115,13 +112,14 @@
     </div>
 </template>
 <script>
-import headpic from '@/assets/tz.jpg'
+// import headpic from '@/assets/tz.jpg'
 import userinfmask from '@/components/userinfoMask'
+import store from '@/store'
 export default {
     data() {
         return {
-            username: '黑色摩天轮',
-            headpicUrl: headpic,//用户头像
+            nickname: localStorage.getItem('nickname'),
+            headpicUrl: localStorage.getItem('headPic'),//用户头像
             isFullscreen: false,//全屏状态
             infoMaskOpenStatus: false,//用户信息弹层状态
             menuCompressionStatus: false//菜单收缩状态
@@ -167,8 +165,16 @@ export default {
             // console.log(key, keyPath);
         }
     },
+    computed: {
+        breadCrumbs() {
+            // store.commit('increment', {
+            //     amount: 10
+            // })
+            return store.state.breadCrumbs;
+        }
+    },
     created() {
-        const self=this;
+        const self = this;
         if (!localStorage.getItem("mobile")) {
             this.$message.error('会话过期，登录失效，请重新登录！');
             this.$message({
@@ -187,147 +193,7 @@ export default {
 </script>
 <style scoped lang="scss">
 @import '../sass/common';
-// 顶部区域header
-$header-height: 50px;
-$header-width:200px;
-@include scrollBar(#475669, $Black);
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: $header-height;
-    z-index: 5;
-    @include transform(translate(0));
-    &.close {
-        .header-left {
-            width: 0;
-            @include transform(translate(-$header-width));
-        }
-        .header-right {
-            width: 100%;
-            margin-left: 0;
-        }
-    }
-    .header-left {
-        float: left;
-        height: 100%;
-        color: #fff;
-        text-align: center;
-        line-height: $header-height;
-        background: $Danger;
-        width: $header-width;
-        @include transition(all 0.3s);
-    }
-    .header-right {
-        width: calc(100% - #{$header-width});
-        margin-left: $header-width;
-        height: 100%;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05); // 头像框
-        @include transition(all 0.3s);
-        .headPicBox {
-            position: relative;
-            float: right;
-            height: 100%;
-            padding: 0 15px;
-            cursor: pointer;
-            &:hover {
-                background: $DarkWhite;
-            }
-            font-size: $fontColor;
-            span {
-                display: inline-block;
-                height: 100%;
-                line-height: $header-height;
-                i {
-                    font-size: 12px;
-                    margin: 0 5px 0 0;
-                }
-            }
-            .imgbox {
-                display: inline-block;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                overflow: hidden;
-                vertical-align: middle;
-            }
-        } // 三个功能按钮
-        .leftAreaList.rightAreaList {
-            float: left;
-            margin-left: 10px;
-        }
-        .rightAreaList {
-            float: right;
-            height: 100%;
-            li {
-                width: 50px;
-                height: 100%;
-                display: inline-block;
-                &:hover {
-                    background: $DarkWhite;
-                }
-                a {
-                    display: block;
-                    width: 100%;
-                    height: 100%;
-                    text-align: center;
-                    font-size: 14px;
-                    line-height: $header-height;
-                    i {
-                        font-size: 16px;
-                        color: $Black;
-                    }
-                }
-            }
-        }
-    }
-} // 导航菜单和内容区域
-.container {
-    &.close {
-        .navMenu {
-            width: 0;
-            @include transform(translate(-$header-width));
-        }
-        .content {
-            width: 100%;
-            left: 0;
-        }
-    }
-    .navMenu {
-        position: fixed;
-        top: $header-height;
-        left: 0;
-        width: $header-width;
-        height: calc(100% - #{$header-height});
-        background: $LightBlack;
-        overflow-x: hidden;
-        overflow-y: auto;
-        @include transition(all 0.3s);
-        .hr {
-            width: 100%;
-            height: 1px;
-            background: $Black;
-        }
-    }
-    .content {
-        position: fixed;
-        top: $header-height;
-        left: $header-width;
-        @include transition(all 0.3s);
-        width: calc(100% - #{$header-width});
-        height: calc(100% - #{$header-height});
-        overflow-x: hidden;
-        overflow-y: auto;
-        z-index: 2;
-        .breadcrumb {
-            width: 100%;
-            padding: 20px;
-            background: #F6F8F8;
-            border-bottom: 1px solid #DEE5E7;
-        }
-    }
-}
+@import '../sass/workbench';
 </style>
 
 

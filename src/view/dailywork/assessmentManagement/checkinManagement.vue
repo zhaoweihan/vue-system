@@ -9,10 +9,10 @@
           <el-input size="small" placeholder="证件号码" v-model="idNumber"></el-input>
           <el-button type="primary" icon="search" size="small" @click="select()">查询</el-button>
           <el-button type="danger" icon="delete2" size="small" @click="empty()">清空</el-button>
+          <el-button type="warning" icon="plus" size="small" @click="goAddItem()">添加</el-button>
+  
           <div class="rightArea">
-            <router-link to="/dailywork/checkinEdit/add">
-              <el-button type="primary" icon="plus"></el-button>
-            </router-link>
+            <!--右浮动操作区域-->
           </div>
   
         </div>
@@ -33,7 +33,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination  @current-change="handleCurrentChange()" :current-page="currentPage"  :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
+        <el-pagination @current-change="handleCurrentChange()" :current-page="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
         </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="面评" name="second"></el-tab-pane>
@@ -43,6 +43,7 @@
 </template>
 <script>
 import { servers } from '../../../api'
+import store from '@/store'
 export default {
   data() {
     return {
@@ -50,7 +51,7 @@ export default {
       tableData: [],//表格数据
       idNumber: "",//筛选条件：身份证号
       selectName: "",//筛选条件：预住人员姓名
-      currentPage:1
+      currentPage: 1
     }
   },
   methods: {
@@ -65,6 +66,16 @@ export default {
         })
         this.tableData = tableData;
       }
+    },
+    setBreadCrumbs() {
+      var list = [{
+        name: '评估管理',
+        url: null,
+      }, {
+        name: '入住评估',
+        url: null
+      }]
+      store.commit('defineBreadCrumbs', list)
     },
     // 切换tab
     handleClick(tab, event) {
@@ -116,13 +127,18 @@ export default {
       this.idNumber = '';
       this.tableData = JSON.parse(localStorage.getItem("tableData"));
     },
+    // 跳转edit页面
+    goAddItem() {
+      this.$router.push('/dailywork/checkinEdit/add');
+    },
     // 切换分页
-    handleCurrentChange(){
-      
+    handleCurrentChange() {
+
     }
   },
   created() {
     this._init();
+    this.setBreadCrumbs();
   }
 }
 </script>
@@ -136,15 +152,21 @@ export default {
     padding: 15px;
     background: #EFF2F7;
     border-radius: 5px;
+    button {
+      a {
+        color: #fff;
+      }
+    }
     .el-input {
       width: 180px;
       display: inline-block;
+      margin-right: 10px;
     }
     .rightArea {
       float: right;
     }
   }
-  .el-pagination{
+  .el-pagination {
     margin-top: 15px;
   }
 }

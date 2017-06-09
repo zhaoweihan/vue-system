@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import workbench from '@/view/workbench' //工作台
 import checkinmanagement from '@/view/dailywork/assessmentManagement/checkinManagement' //入住评估
 import checkinedit from '@/view/dailywork/assessmentManagement/checkinEdit'
+import userinfo from '@/view/usercenter/userinfo'
 import login from '@/view/login'
 Vue.use(Router)
 
@@ -13,13 +14,17 @@ export default new Router({
     name: 'workbench',
     component: workbench,
     children: [{
-      path: '/dailywork/checkinManagement',
+      path: '/dailywork/checkinManagement',//入住评估列表
       name: 'checkinManagement',
       component: checkinmanagement,
     }, {
-      path: '/dailywork/checkinEdit/:id',
+      path: '/dailywork/checkinEdit/:id',//入住评估编辑
       name: 'checkinEdit',
       component: checkinedit,
+    }, {
+      path: '/usercenter/userinfo',
+      name: 'userinfo',
+      component: userinfo,
     }]
   }, {
     path: '/login',

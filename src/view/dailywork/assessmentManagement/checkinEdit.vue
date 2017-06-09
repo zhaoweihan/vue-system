@@ -6,7 +6,7 @@
         <el-col :span="6">
             <el-form ref="form" :model="form" label-width="180px">
                 <el-form-item label="预住人员姓名：">
-                    <el-input v-model="forms.name"  name="username" maxlength="6"></el-input>
+                    <el-input v-model="forms.name" name="username" :maxlength="6"></el-input>
                 </el-form-item>
                 <el-form-item label="性别：">
                     <el-radio-group v-model="forms.age">
@@ -18,17 +18,17 @@
                     <el-input type="tel" v-model="forms.gender"></el-input>
                 </el-form-item>
                 <el-form-item label="身份证号：">
-                    <el-input type="tel" v-model="forms.idNumber" maxlength="18"></el-input>
+                    <el-input type="tel" v-model="forms.idNumber" :maxlength="18"></el-input>
                 </el-form-item>
                 <el-form-item label="预约时间：">
                     <el-date-picker v-model="forms.reservateTime" type="date" placeholder="选择日期" :editable="false" :picker-options="pickerOptions1">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="联系人：">
-                    <el-input v-model="forms.contactPerson" maxlength="6"></el-input>
+                    <el-input v-model="forms.contactPerson" :maxlength="6"></el-input>
                 </el-form-item>
                 <el-form-item label="预约电话：">
-                    <el-input type="tel" v-model="forms.phoneNum" maxlength="11"></el-input>
+                    <el-input type="tel" v-model="forms.phoneNum" :maxlength="11"></el-input>
                 </el-form-item>
     
                 <div class="submit">
@@ -40,17 +40,14 @@
         <el-col :span="15">
             <div class="station">{{forms}}</div>
             <!--<input type="text" name="mobile" v-validate="'required|mobile'">
-                                    <p>
-                                        <span v-show="errors.has('mobile')" class="help is-danger">{{ errors.first('mobile') }}</span>
-                                    </p>-->
+                                        <p>
+                                            <span v-show="errors.has('mobile')" class="help is-danger">{{ errors.first('mobile') }}</span>
+                                        </p>-->
         </el-col>
     </el-row>
 </template>
 <script>
-import Vue from 'vue'
-// import VeeValidate from 'vee-validate';
-// Vue.use(VeeValidate);
-// import '@/lib/validate'
+import store from '@/store'
 export default {
     data() {
         return {
@@ -90,15 +87,26 @@ export default {
     },
     methods: {
         init() {
-            console.log(this.$route.params.id)
             if (this.$route.params.id != "add") {
                 let tableData = JSON.parse(localStorage.getItem("tableData"));
                 this.forms = tableData[this.$route.params.id];
             }
-
+        },
+        setBreadCrumbs() {
+            var list = [{
+                name: '评估管理',
+                url: null,
+            }, {
+                name: '入住评估',
+                url: '/dailywork/checkinManagement'
+            }, {
+                name: '评估编辑',
+                url: null
+            }]
+            store.commit('defineBreadCrumbs', list)
         },
         onSubmit(submitKey = true) {
-            const self=this;
+            const self = this;
             for (var key in this.forms) {
                 if (this.forms[key] == "") {
                     submitKey = false;
@@ -108,7 +116,7 @@ export default {
                 if (localStorage.getItem('tableData')) {//首先判断缓存里是否有值，没有则新声明一个数据否则，直接用缓存里的数组
                     var arr = JSON.parse(localStorage.getItem("tableData"));//拿到缓存中的数据
                     if (this.$route.params.id != "add") {//判断是新建还是修改，修改的话则改动原数据
-                        arr[this.$route.params.id]=this.forms;
+                        arr[this.$route.params.id] = this.forms;
                     } else {//新建，直接插入数据
                         arr.push(this.forms);
                     }
@@ -122,8 +130,8 @@ export default {
                 this.$message({
                     message: '保存成功',
                     type: 'success',
-                    duration:1500,
-                    onClose(msg){
+                    duration: 1500,
+                    onClose(msg) {
                         self.$router.push('/dailywork/checkinManagement');
                     }
                 });
@@ -134,6 +142,7 @@ export default {
     },
     created() {
         this.init();
+        this.setBreadCrumbs();
     }
 }
 </script>

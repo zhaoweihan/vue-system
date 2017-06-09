@@ -1,8 +1,10 @@
 <template>
     <div class="useinfoMask" :class="{'open':openStatus}">
         <div class="info">
-            <p>姓名：赵日天</p>
-            <p>性别：男</p>
+            <router-link to="/usercenter/userinfo">
+                <p>姓名：{{realname}}</p>
+                <p>性别：{{gender}}</p>
+            </router-link>
         </div>
         <ul class="useinfoMask-list infolist">
             <li>
@@ -30,17 +32,19 @@
 export default {
     data() {
         return {
-            msg: '用户信息弹层'
+            msg: '用户信息弹层',
+            realname: localStorage.getItem('realname'),
+            gender: localStorage.getItem('gender')
         }
     },
     methods: {
         signOut() {
-            this.$confirm('确定退出系统', '退出',{
-                type:"warning"
+            this.$confirm('确定退出系统', '退出', {
+                type: "warning"
             }).then(() => {
                 localStorage.removeItem("mobile");
                 this.$router.push('/login');
-            }).catch(() => {});
+            }).catch(() => { });
         }
     },
     props: ['openStatus']

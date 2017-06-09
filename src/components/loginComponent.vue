@@ -109,6 +109,10 @@ export default {
                         duration: 1000,
                         onClose() {
                             localStorage.setItem('mobile', self.loginForm.account);
+                            localStorage.setItem('nickname', '黑色摩天轮');
+                            localStorage.setItem('realname', '赵日天');
+                            localStorage.setItem('gender', '男');
+                            localStorage.setItem('headPic', 'http://ocif3scej.bkt.clouddn.com/tz2.jpg');
                             self.$router.replace('/dailywork/checkinManagement');
                         }
                     });
