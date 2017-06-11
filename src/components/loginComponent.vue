@@ -22,6 +22,7 @@
     </div>
 </template>
 <script>
+import { servers } from '../api.js'
 export default {
     data() {
         // 手机号
@@ -86,36 +87,41 @@ export default {
 
             },
             sayPwdStatus: 'password',
-            sayPwdIcon:'view'
+            sayPwdIcon: 'view'
         }
     },
     methods: {
         sayPwd(ev) {
             if (this.sayPwdStatus == 'password') {
                 this.sayPwdStatus = 'text'
-                this.sayPwdIcon='search'
+                this.sayPwdIcon = 'search'
             } else {
                 this.sayPwdStatus = 'password'
-                this.sayPwdIcon='view'
+                this.sayPwdIcon = 'view'
             }
         },
         submitForm(formName) {
             const self = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$message({
-                        message: '恭喜你，登录成功',
-                        type: 'success',
-                        duration: 1000,
-                        onClose() {
-                            localStorage.setItem('mobile', self.loginForm.account);
-                            localStorage.setItem('nickname', '黑色摩天轮');
-                            localStorage.setItem('realname', '赵日天');
-                            localStorage.setItem('gender', '男');
-                            localStorage.setItem('headPic', 'http://ocif3scej.bkt.clouddn.com/tz2.jpg');
-                            self.$router.replace('/dailywork/checkinManagement');
-                        }
-                    });
+                    servers.post('/login', {
+                        account: self.loginForm.account,
+                        password: self.loginForm.password
+                    }, (result) => {
+                        this.$message({
+                            message: '恭喜你，登录成功',
+                            type: 'success',
+                            duration: 1000,
+                            onClose() {
+                                localStorage.setItem('mobile', self.loginForm.account);
+                                localStorage.setItem('id', result.id);
+                                self.$router.replace('/dailywork/checkinManagement');
+                            }
+                        });
+                    },(msg)=>{
+                        this.$message.error(msg)
+                    })
+
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -123,14 +129,14 @@ export default {
             });
         },
         // 去注册
-        goRegister(){
-             this.$emit('changeStatus', 0)
+        goRegister() {
+            this.$emit('changeStatus', 0)
         }
     }
 }
 </script>
 
 <style lang="scss">
-    @import '../sass/loginCom'
+@import '../sass/loginCom'
 </style>
 

@@ -14,13 +14,13 @@ export const servers = {
    * @param {*成功回调} sucessCallback 
    * @param {*请求参数} dataParams 
    */
-  get(url, sucessCallback, dataParams) {
+  get(url, dataParams, sucessCallback, ) {
     axios.get(baseUrl + url, {
         params: dataParams
       }).then(function (response) {
         const result = response.data;
         if (result.code == 200) {
-          sucessCallback(result);
+          sucessCallback(result.data);
         } else {
           Toast({
             message: result,
@@ -39,18 +39,14 @@ export const servers = {
    * @param {*成功回调} sucessCallback 
    * @param {*请求参数} dataParams 
    */
-  post(url, sucessCallback, dataParams) {
+  post(url, dataParams, sucessCallback,errorCallback) {
     axios.post(baseUrl + url, dataParams)
       .then(function (response) {
         const result = response.data;
         if (result.code == 200) {
-          sucessCallback(result);
-        } else {
-          Toast({
-            message: result,
-            position: 'bottom',
-            duration: 3000
-          });
+          sucessCallback(result.data);
+        } else if(result.code>=6000){
+          errorCallback(result.msg);
         }
       })
       .catch(function (error) {
@@ -61,9 +57,9 @@ export const servers = {
    *表格数据
    */
   getTableData() {
-    return this.get('/tableList',  (result)=> {
-      
-      
+    return this.get('/tableList', (result) => {
+
+
     })
   }
 }

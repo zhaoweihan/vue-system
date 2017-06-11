@@ -42,15 +42,15 @@ export default {
                 headPic: localStorage.getItem("headPic"),
             },
             // 是否只读
-            isReadOnly: false,
+            isReadOnly: true,
         }
     },
     methods: {
         handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
+            this.userinfo.headPic = URL.createObjectURL(file.raw);
         },
         handleAvatarError(err, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
+            this.userinfo.headPic = URL.createObjectURL(file.raw);
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
