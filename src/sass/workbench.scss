@@ -67,6 +67,13 @@ $header-width:200px;
         .leftAreaList.rightAreaList {
             float: left;
             margin-left: 10px;
+            width: 500px;
+            ul{
+                display: inline-block;
+            }
+            .el-input{
+                width: 150px;
+            }
         }
         .rightAreaList {
             float: right;

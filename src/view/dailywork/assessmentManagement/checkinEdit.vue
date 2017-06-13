@@ -9,13 +9,13 @@
                     <el-input v-model="forms.name" name="username" :maxlength="6"></el-input>
                 </el-form-item>
                 <el-form-item label="性别：">
-                    <el-radio-group v-model="forms.age">
+                    <el-radio-group v-model="forms.gender">
                         <el-radio-button label="男"></el-radio-button>
                         <el-radio-button label="女"></el-radio-button>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="年龄：">
-                    <el-input type="tel" v-model="forms.gender"></el-input>
+                    <el-input type="tel" v-model="forms.age"></el-input>
                 </el-form-item>
                 <el-form-item label="身份证号：">
                     <el-input type="tel" v-model="forms.idNumber" :maxlength="18"></el-input>
@@ -40,14 +40,15 @@
         <el-col :span="15">
             <div class="station">{{forms}}</div>
             <!--<input type="text" name="mobile" v-validate="'required|mobile'">
-                                        <p>
-                                            <span v-show="errors.has('mobile')" class="help is-danger">{{ errors.first('mobile') }}</span>
-                                        </p>-->
+                                                            <p>
+                                                                <span v-show="errors.has('mobile')" class="help is-danger">{{ errors.first('mobile') }}</span>
+                                                            </p>-->
         </el-col>
     </el-row>
 </template>
 <script>
 import store from '@/store'
+import { servers } from '@/api'
 export default {
     data() {
         return {
@@ -88,8 +89,9 @@ export default {
     methods: {
         init() {
             if (this.$route.params.id != "add") {
-                let tableData = JSON.parse(localStorage.getItem("tableData"));
-                this.forms = tableData[this.$route.params.id];
+                servers.post('/getCheckinAssessItem', { id: this.$route.params.id }, (result) => {
+                     this.forms=result;
+                })
             }
         },
         setBreadCrumbs() {
@@ -113,28 +115,26 @@ export default {
                 }
             }
             if (submitKey) {
-                if (localStorage.getItem('tableData')) {//首先判断缓存里是否有值，没有则新声明一个数据否则，直接用缓存里的数组
-                    var arr = JSON.parse(localStorage.getItem("tableData"));//拿到缓存中的数据
-                    if (this.$route.params.id != "add") {//判断是新建还是修改，修改的话则改动原数据
-                        arr[this.$route.params.id] = this.forms;
-                    } else {//新建，直接插入数据
-                        arr.push(this.forms);
-                    }
-                } else {//缓存里没值，新声明数组并直接插入数据
-                    var arr = []
-                    arr.push(this.forms);
+                let type;
+                let id;
+                if (this.$route.params.id != "add") {//修改
+                    type = 1;
+                    id = this.$route.params.id;
+                } else {//新建
+                    type = 0;
+                    id = null
                 }
+                servers.post('/updateCheckinAssessItem', { type: type, id: id, formdata: this.forms }, (result) => {
+                    this.$message({
+                        message: '恭喜你，保存成功！',
+                        type: 'success',
+                        duration:1000,
+                        onClose(){
+                            self.$router.push('/dailywork/checkinManagement')
+                        }
+                    });
+                })
 
-
-                localStorage.setItem("tableData", JSON.stringify(arr));
-                this.$message({
-                    message: '保存成功',
-                    type: 'success',
-                    duration: 1500,
-                    onClose(msg) {
-                        self.$router.push('/dailywork/checkinManagement');
-                    }
-                });
             } else {
                 this.$message.error('所有输入项必须全部完成');
             }

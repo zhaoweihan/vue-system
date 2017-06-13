@@ -5,16 +5,19 @@
             <div class="header-right">
                 <!--左侧功能区域-->
                 <div class="leftAreaList rightAreaList">
-                    <li @click="compression()">
-                        <a href="javascript:;">
-                            <i class="fa fa-dedent"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="fa fa-user-o"></i>
-                        </a>
-                    </li>
+                    <ul>
+                        <li @click="compression()">
+                            <a href="javascript:;">
+                                <i class="fa fa-dedent"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-user-o"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <el-input v-model="search" placeholder="请输入搜索内容" type="serach" size="small" icon="search"></el-input>
                 </div>
                 <!--头像和名字-->
                 <div class="headPicBox">
@@ -100,7 +103,7 @@
                     <div class="hr"></div>
                 </el-menu>
             </div>
-            <div class="content">
+            <div class="content" @click.stop="hideMask()">
                 <div class="breadcrumb" v-if="breadCrumbs.length">
                     <el-breadcrumb separator="/">
                         <el-breadcrumb-item :to="{ path: bc.url }" v-for="(bc,$index) in breadCrumbs" :key="$index">{{bc.name}}</el-breadcrumb-item>
@@ -122,7 +125,8 @@ export default {
             headpicUrl: localStorage.getItem('headPic'),//用户头像
             isFullscreen: false,//全屏状态
             infoMaskOpenStatus: false,//用户信息弹层状态
-            menuCompressionStatus: false//菜单收缩状态
+            menuCompressionStatus: false,//菜单收缩状态
+            search:''
         }
     },
     methods: {
@@ -152,8 +156,13 @@ export default {
                 }
             }
         },
+        // 切换遮罩层
         openMask() {
             this.infoMaskOpenStatus ? this.infoMaskOpenStatus = false : this.infoMaskOpenStatus = true;
+        },
+        // 关闭遮罩层
+        hideMask(){
+            this.infoMaskOpenStatus=false;
         },
         compression() {
             this.menuCompressionStatus ? this.menuCompressionStatus = false : this.menuCompressionStatus = true;

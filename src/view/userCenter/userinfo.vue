@@ -4,22 +4,22 @@
         <h2>个人信息
             <i class="el-icon-edit" @click="edit()" v-show="isReadOnly"></i>
         </h2>
-        <el-form ref="userinfo" :model="userinfo" label-width="80px">
+        <el-form ref="userinfo" :model="userinfo" label-width="80px" :rules="rules">
             <span class="yhtx">用户头像</span>
             <el-upload class="avatar-uploader" :disabled="isReadOnly" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-error="handleAvatarError" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                 <img v-if="userinfo.headPic" :src="userinfo.headPic" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <el-form-item label="用户昵称">
+            <el-form-item label="用户昵称" prop="nickname">
                 <el-input v-model="userinfo.nickname" size="small" placeholder="请输入用户昵称" :readonly="isReadOnly"></el-input>
             </el-form-item>
-            <el-form-item label="真实姓名">
+            <el-form-item label="真实姓名" prop="realname">
                 <el-input v-model="userinfo.realname" size="small" placeholder="请输入真实姓名" :readonly="isReadOnly"></el-input>
             </el-form-item>
             <el-form-item label="手机号">
                 <el-input v-model="userinfo.mobile" type="tel" readonly></el-input>
             </el-form-item>
-            <el-form-item label="用户性别">
+            <el-form-item label="用户性别" prop="gender">
                 <el-radio-group v-model="userinfo.gender" :disabled="isReadOnly">
                     <el-radio label="男" name="gender">男</el-radio>
                     <el-radio label="女" name="gender">女</el-radio>
@@ -43,6 +43,10 @@ export default {
             },
             // 是否只读
             isReadOnly: true,
+            rules: {
+                nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+                realname: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
+            }
         }
     },
     methods: {
@@ -71,12 +75,20 @@ export default {
         },
         saveinfo(type) {
             if (type) {
-                this.isReadOnly = true;
-                //TODO: 保存修改后的个人信息
-                this.$message({
-                    message: '保存成功！',
-                    type: 'success'
+                this.$refs['userinfo'].validate((valid) => {
+                    if (valid) {
+                        this.isReadOnly = true;
+                        localStorage.setItem('nickname', this.userinfo.nickname);
+                        localStorage.setItem('realname', this.userinfo.realname);
+                        localStorage.setItem('gender', this.userinfo.gender);
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        });
+                    }
+
                 });
+
             } else {
                 this.userinfo = {
                     nickname: localStorage.getItem("nickname"),
@@ -86,7 +98,7 @@ export default {
                     headPic: localStorage.getItem("headPic"),
                 },
                     this.isReadOnly = true;
-                
+
             }
         }
     }
