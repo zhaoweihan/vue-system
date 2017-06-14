@@ -7,7 +7,7 @@
         <div class="operateArea">
           <el-input size="small" placeholder="预祝人员姓名" v-model="selectName"></el-input>
           <el-input size="small" placeholder="证件号码" v-model="idNumber"></el-input>
-          <el-button type="primary" icon="search" size="small" @click="select()">查询</el-button>
+          <el-button type="primary" icon="search" size="small" @click="getTableList()">查询</el-button>
           <el-button type="danger" icon="delete2" size="small" @click="empty()">清空</el-button>
           <el-button type="warning" icon="plus" size="small" @click="goAddItem()">添加</el-button>
   
@@ -33,8 +33,8 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination @current-change="handleCurrentChange()" :current-page="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="tableData.length">
-        </el-pagination>
+        <!--分页-->
+        <el-pagination v-show="totalCount>=pageSize" @current-change="handleCurrentChange" :total="totalCount" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"></el-pagination>
       </el-tab-pane>
       <el-tab-pane label="面评" name="second"></el-tab-pane>
     </el-tabs>
@@ -51,21 +51,17 @@ export default {
       tableData: [],//表格数据
       idNumber: "",//筛选条件：身份证号
       selectName: "",//筛选条件：预住人员姓名
-      currentPage: 1
+      totalCount: 0,//列表总条数
+      currentPage: 1,//当前页码
+      pageSize: 10,//每页条数
     }
   },
   methods: {
-    _init() {
-      // servers.post('/tableList', (result) => {
-      //   this.tableData = result.data.list
-      // });
-      if (localStorage.getItem("tableData")) {
-        let tableData = JSON.parse(localStorage.getItem("tableData"));
-        tableData.forEach((ele) => {
-          ele.reservateTime = ele.reservateTime.split("T")[0];
-        })
-        this.tableData = tableData;
-      }
+    getTableList() {
+      servers.post('/checkinAssessList', { currentPage: this.currentPage, pageSize: this.pageSize,filterName:this.selectName,filterNum:this.idNumber }, (result) => {
+        this.tableData = result.list;
+        this.totalCount = result.totalCount;
+      });
     },
     setBreadCrumbs() {
       var list = [{
@@ -83,7 +79,7 @@ export default {
     },
     // 编辑信息
     handleEdit(index, row) {
-      this.$router.push('/dailywork/checkinEdit/' + index);
+      this.$router.push('/dailywork/checkinEdit/' + row.id);
     },
     // 删除信息
     handleDelete(index, row) {
@@ -92,52 +88,34 @@ export default {
         cancelButtonText: '容朕三思',
         type: 'warning'
       }).then(() => {
-        let tableData = JSON.parse(localStorage.getItem("tableData"));
-        this.tableData.splice(index, 1);
-        tableData.splice(index, 1);
-        localStorage.setItem("tableData", JSON.stringify(tableData));
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        servers.post('/deleteCheckAssessItem', { id: row.id }, (result) => {
+          this.getTableList();
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+
       }).catch(() => { });
-    },
-    // 查询
-    select() {
-      if (this.selectName != "" || this.idNumber != "") {
-        if (this.selectName != "") {//名字
-          let arr = [];
-          this.tableData.forEach(function (element) {
-            if (element.name.indexOf(this.selectName) > -1) {
-              arr.push(element);
-            }
-          }, this);
-          this.tableData = arr;
-        } else if (this.idNumber != "") {
-
-        }
-      } else {
-        this.tableData = JSON.parse(localStorage.getItem("tableData"));
-      }
-
     },
     // 清空查询
     empty() {
       this.selectName = '';
       this.idNumber = '';
-      this.tableData = JSON.parse(localStorage.getItem("tableData"));
+      this.getTableList();
     },
     // 跳转edit页面
     goAddItem() {
       this.$router.push('/dailywork/checkinEdit/add');
     },
     // 切换分页
-    handleCurrentChange() {
-
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.getTableList();
     }
   },
   created() {
-    this._init();
+    this.getTableList();
     this.setBreadCrumbs();
   }
 }
