@@ -25,7 +25,7 @@
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <div class="imgbox" @click="openMask()">
-                        <img :src="headpicUrl" alt="头像">
+                        <img :src="headPic" alt="头像">
                     </div>
                     <userinfmask :openStatus="infoMaskOpenStatus"></userinfmask>
                 </div>
@@ -115,14 +115,12 @@
     </div>
 </template>
 <script>
-// import headpic from '@/assets/tz.jpg'
+import {servers} from '@/api'
 import userinfmask from '@/components/userinfoMask'
 import store from '@/store'
 export default {
     data() {
         return {
-            nickname: localStorage.getItem('nickname'),
-            headpicUrl: localStorage.getItem('headPic'),//用户头像
             isFullscreen: false,//全屏状态
             infoMaskOpenStatus: false,//用户信息弹层状态
             menuCompressionStatus: false,//菜单收缩状态
@@ -156,6 +154,15 @@ export default {
                 }
             }
         },
+        /**
+         * 获取登录用户信息
+         */
+        getUserInfo(){
+            servers.post('/getUserInfo',{id:localStorage.getItem('id')},(result)=>{
+                store.commit('setNickName', result.nickname);
+                store.commit('setHeadPic', result.headPic);
+            })
+        },
         // 切换遮罩层
         openMask() {
             this.infoMaskOpenStatus ? this.infoMaskOpenStatus = false : this.infoMaskOpenStatus = true;
@@ -164,6 +171,7 @@ export default {
         hideMask(){
             this.infoMaskOpenStatus=false;
         },
+        //隐藏左侧导航菜单
         compression() {
             this.menuCompressionStatus ? this.menuCompressionStatus = false : this.menuCompressionStatus = true;
         },
@@ -180,6 +188,12 @@ export default {
             //     amount: 10
             // })
             return store.state.breadCrumbs;
+        },
+        nickname(){
+            return store.state.nickname;
+        },
+        headPic(){
+            return store.state.headPic;
         }
     },
     created() {
@@ -195,6 +209,8 @@ export default {
                 }
             });
 
+        }else{
+            this.getUserInfo();
         }
     },
     components: { userinfmask }

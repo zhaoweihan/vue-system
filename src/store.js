@@ -6,14 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     //   面包屑导航
-    breadCrumbs: []
+    breadCrumbs: [],
+    nickname:'',
+    headPic:''
   },
   mutations: {
-    // Count (state, platform) {
-    //   state.count = platform
-    // },
     defineBreadCrumbs(state, platform) {
       state.breadCrumbs = platform;
+    },
+    setNickName(state, platform){
+      state.nickname=platform;
+    },
+    setHeadPic(state, platform){
+      state.headPic=platform;
     }
   }
 
