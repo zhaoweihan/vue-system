@@ -12,7 +12,7 @@
                 <el-form-item label="验证码" prop="vCode" label-width="54px">
                     <el-input v-model.number="loginForm.vCode" placeholder="请输入验证码" :maxlength="6" type="tel"></el-input>
                 </el-form-item>
-                <el-button type="primary" @click="submitForm('loginForm')" class="submitBtn loginBtn" native-type="submit">登 录</el-button>
+                <el-button type="primary" @click.prevent="submitForm('loginForm')" class="submitBtn loginBtn" native-type="submit">登 录</el-button>
                 <el-button type="danger" class="submitBtn" native-type="button" @click="goRegister()">注 册</el-button>
                 <p class="findPw">
                     <a href="javascript:;">找回密码</a>

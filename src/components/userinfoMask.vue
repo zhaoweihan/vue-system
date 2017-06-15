@@ -29,12 +29,11 @@
     </div>
 </template>
 <script>
+import store from '@/store'
 export default {
     data() {
         return {
             msg: '用户信息弹层',
-            realname: localStorage.getItem('realname'),
-            gender: localStorage.getItem('gender')
         }
     },
     methods: {
@@ -46,6 +45,16 @@ export default {
                 this.$router.push('/login');
             }).catch(() => { });
         }
+    },
+    computed:{
+        //TODO:
+        realname(){
+            return store.state.nickname;
+        },
+        gender(){
+            return store.state.nickname;
+        }
+
     },
     props: ['openStatus']
 }
