@@ -31,15 +31,17 @@
     </div>
 </template>
 <script>
+import store from '@/store'
+import { servers } from '@/api'
 export default {
     data() {
         return {
             userinfo: {
-                nickname: localStorage.getItem("nickname"),
-                realname: localStorage.getItem("realname"),
+                nickname: '',
+                realname: '',
                 mobile: localStorage.getItem("mobile"),
-                gender: localStorage.getItem("gender"),
-                headPic: localStorage.getItem("headPic"),
+                gender: '',
+                headPic: '',
             },
             // 是否只读
             isReadOnly: true,
@@ -50,6 +52,14 @@ export default {
         }
     },
     methods: {
+        getUserInfo() {
+            servers.post('/getUserInfo',{id:localStorage.getItem('id')}, (result) => {
+                this.userinfo.nickname = result.nickname;
+                this.userinfo.realname = result.realname;
+                this.userinfo.headPic = result.headPic;
+                this.userinfo.gender = result.gender;
+            })
+        },
         handleAvatarSuccess(res, file) {
             this.userinfo.headPic = URL.createObjectURL(file.raw);
         },
@@ -77,30 +87,37 @@ export default {
             if (type) {
                 this.$refs['userinfo'].validate((valid) => {
                     if (valid) {
-                        this.isReadOnly = true;
-                        localStorage.setItem('nickname', this.userinfo.nickname);
-                        localStorage.setItem('realname', this.userinfo.realname);
-                        localStorage.setItem('gender', this.userinfo.gender);
-                        this.$message({
-                            message: '保存成功！',
-                            type: 'success'
-                        });
+                        servers.post('/updateUserInfo', { id: localStorage.getItem('id'), userinfo: this.userinfo }, (result) => {
+                            store.commit('setNickName', this.userinfo.nickname);
+                            store.commit('setHeadPic', this.userinfo.headPic);
+                            store.commit('setRealName', this.userinfo.realname);
+                            store.commit('setGender', this.userinfo.gender);
+                            this.$message({
+                                message: '保存成功！',
+                                type: 'success'
+                            });
+                            this.isReadOnly = true;
+                        })
+
                     }
 
                 });
 
             } else {
                 this.userinfo = {
-                    nickname: localStorage.getItem("nickname"),
-                    realname: localStorage.getItem("realname"),
-                    gender: localStorage.getItem("gender"),
+                    nickname: store.state.nickname,
+                    realname: store.state.realname,
+                    gender: store.state.gender,
                     mobile: localStorage.getItem("mobile"),
-                    headPic: localStorage.getItem("headPic"),
+                    headPic: store.state.headPic,
                 },
                     this.isReadOnly = true;
 
             }
         }
+    },
+    created() {
+        this.getUserInfo();
     }
 }
 </script>

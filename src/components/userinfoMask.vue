@@ -47,12 +47,11 @@ export default {
         }
     },
     computed:{
-        //TODO:
         realname(){
-            return store.state.nickname;
+            return store.state.realname;
         },
         gender(){
-            return store.state.nickname;
+            return store.state.gender;
         }
 
     },

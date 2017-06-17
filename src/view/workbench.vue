@@ -161,6 +161,8 @@ export default {
             servers.post('/getUserInfo',{id:localStorage.getItem('id')},(result)=>{
                 store.commit('setNickName', result.nickname);
                 store.commit('setHeadPic', result.headPic);
+                store.commit('setRealName', result.realname);
+                store.commit('setGender', result.gender);
             })
         },
         // 切换遮罩层
