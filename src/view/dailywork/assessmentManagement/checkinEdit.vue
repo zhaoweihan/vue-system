@@ -6,7 +6,7 @@
         <el-col :span="6">
             <el-form ref="form" :model="form" label-width="180px">
                 <el-form-item label="预住人员姓名：">
-                    <el-input v-model="forms.name" name="username" :maxlength="6"></el-input>
+                    <el-input v-model="forms.name" name="username" :maxlength="6" placeholder="请填写入住人员姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="性别：">
                     <el-radio-group v-model="forms.gender">
@@ -15,20 +15,20 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="年龄：">
-                    <el-input type="tel" v-model="forms.age"></el-input>
+                    <el-input type="tel" v-model="forms.age" placeholder="请填写年龄"></el-input>
                 </el-form-item>
                 <el-form-item label="身份证号：">
-                    <el-input type="tel" v-model="forms.idNumber" :maxlength="18"></el-input>
+                    <el-input type="tel" v-model="forms.idNumber" :maxlength="18"  placeholder="请填写18位身份证号"></el-input>
                 </el-form-item>
                 <el-form-item label="预约时间：">
                     <el-date-picker v-model="forms.reservateTime" type="date" placeholder="选择日期" :editable="false" :picker-options="pickerOptions1">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="联系人：">
-                    <el-input v-model="forms.contactPerson" :maxlength="6"></el-input>
+                    <el-input v-model="forms.contactPerson" :maxlength="6" placeholder="请填写联系人"></el-input>
                 </el-form-item>
                 <el-form-item label="预约电话：">
-                    <el-input type="tel" v-model="forms.phoneNum" :maxlength="11"></el-input>
+                    <el-input type="tel" v-model="forms.phoneNum" :maxlength="11" placeholder="请填写预约电话"></el-input>
                 </el-form-item>
     
                 <div class="submit">

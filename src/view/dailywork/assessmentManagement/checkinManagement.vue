@@ -23,9 +23,9 @@
           <el-table-column prop="gender" label="性别" width="70"></el-table-column>
           <el-table-column prop="age" label="年龄" width="70"></el-table-column>
           <el-table-column prop="idNumber" label="身份证号" width="186"></el-table-column>
-          <el-table-column prop="reservateTime" label="预约时间"></el-table-column>
+          <el-table-column prop="reservationTime" label="预约时间"></el-table-column>
           <el-table-column prop="contactPerson" label="联系人"></el-table-column>
-          <el-table-column prop="phoneNum" label="联系电话"></el-table-column>
+          <el-table-column prop="contactMobile" label="联系电话"></el-table-column>
           <el-table-column prop="operate" label="操作">
             <template scope="scope">
               <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -59,6 +59,9 @@ export default {
   methods: {
     getTableList() {
       servers.post('/checkinAssessList', { currentPage: this.currentPage, pageSize: this.pageSize,filterName:this.selectName,filterNum:this.idNumber }, (result) => {
+        result.list.forEach(function(element) {
+          element.reservationTime=element.reservationTime.split("T")[0];
+        }, this);
         this.tableData = result.list;
         this.totalCount = result.totalCount;
       });
