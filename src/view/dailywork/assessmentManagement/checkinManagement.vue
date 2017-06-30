@@ -19,12 +19,12 @@
         <!--表格-->
         <el-table :data="tableData" :stripe="true">
           <el-table-column type="index" label="序号" width="70"></el-table-column>
-          <el-table-column prop="name" label="预住人员姓名"></el-table-column>
+          <el-table-column prop="name" label="预住人员姓名" width="150"></el-table-column>
           <el-table-column prop="gender" label="性别" width="70"></el-table-column>
           <el-table-column prop="age" label="年龄" width="70"></el-table-column>
-          <el-table-column prop="idNumber" label="身份证号" width="186"></el-table-column>
+          <el-table-column prop="idNumber" label="身份证号" ></el-table-column>
           <el-table-column prop="reservationTime" label="预约时间"></el-table-column>
-          <el-table-column prop="contactPerson" label="联系人"></el-table-column>
+          <el-table-column prop="contactPerson" label="联系人" width="100"></el-table-column>
           <el-table-column prop="contactMobile" label="联系电话"></el-table-column>
           <el-table-column prop="operate" label="操作">
             <template scope="scope">
