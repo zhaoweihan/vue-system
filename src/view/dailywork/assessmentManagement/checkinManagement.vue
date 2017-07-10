@@ -53,7 +53,7 @@ export default {
       selectName: "",//筛选条件：预住人员姓名
       totalCount: 0,//列表总条数
       currentPage: 1,//当前页码
-      pageSize: 10,//每页条数
+      pageSize: 2,//每页条数
     }
   },
   methods: {
