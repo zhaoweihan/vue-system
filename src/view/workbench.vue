@@ -118,6 +118,7 @@
 import {servers} from '@/api'
 import userinfmask from '@/components/userinfoMask'
 import store from '@/store'
+import defaultHead from '@/assets/defaultHead.svg'
 export default {
     data() {
         return {
@@ -159,6 +160,12 @@ export default {
          */
         getUserInfo(){
             servers.post('/getUserInfo',{id:localStorage.getItem('id')},(result)=>{
+                if(!result.nickname){
+                    result.nickname=localStorage.getItem("mobile");
+                }
+                if(!result.headPic){
+                    result.headPic=defaultHead;
+                }
                 store.commit('setNickName', result.nickname);
                 store.commit('setHeadPic', result.headPic);
                 store.commit('setRealName', result.realname);

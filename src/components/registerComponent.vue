@@ -16,13 +16,14 @@
                     <el-input v-model.number="registerForm.vCode" placeholder="请输入验证码" :maxlength="6" type="tel" class="vcodeInput"></el-input>
                     <el-button type="danger" class="vcodeBtn" native-type="button" :disabled="isSendVcode" @click="sendVocde()">{{sendVocodeWord}}</el-button>
                 </el-form-item>
-                <el-button type="primary" @click="submitForm('loginForm')" class="submitBtn loginBtn" native-type="submit">注 册</el-button>
+                <el-button type="primary" @click.prevent="submitForm('registerForm')" class="submitBtn loginBtn" native-type="submit">注 册</el-button>
                 <el-button type="danger" class="submitBtn" native-type="button" @click="goLogin()">登录</el-button>
             </el-form>
         </div>
     </div>
 </template>
 <script>
+import { servers } from '../api.js'
 export default {
     data() {
         // 手机号
@@ -106,26 +107,47 @@ export default {
         sendVocde() {
             this.$refs.registerForm.validateField('mobile', (errorMessage) => {
                 if (errorMessage == '') {
-                    this.isSendVcode=true;
+                    this.isSendVcode = true;
                     this.sendVocodeWord = 60;
                     const sendvCodeTimer = setInterval(() => {
                         if (this.sendVocodeWord == 0) {
                             this.sendVocodeWord = '再次发送'
-                            this.isSendVcode=false;
+                            this.isSendVcode = false;
                             clearInterval(sendvCodeTimer);
-                        }else{
+                        } else {
                             this.sendVocodeWord--;
                         }
-                        
+
                     }, 1000);
                 }
             })
         },
         // 提交注册
         submitForm(formName) {
-            this.$refs.registerForm.validateField('mobile', (errorMessage) => {
-                console.log(errorMessage);
+            var self = this;
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    servers.post("/register", {
+                        account: this.registerForm.mobile,
+                        password: this.registerForm.password,
+                        vCode:this.registerForm.vCode
+                    }, (result) => {
+                        this.$message({
+                            message: '注册成功',
+                            type: 'success',
+                            duration:1000,
+                            onClose(){
+                                self.goLogin();
+                            }
+                        });
+                    })
+
+
+
+                }
+
             })
+
         },
         //翻转到登录
         goLogin() {

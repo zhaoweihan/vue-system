@@ -33,6 +33,7 @@
 <script>
 import store from '@/store'
 import { servers } from '@/api'
+import defaultHead from '@/assets/defaultHead2.svg'
 export default {
     data() {
         return {
@@ -41,7 +42,7 @@ export default {
                 realname: '',
                 mobile: localStorage.getItem("mobile"),
                 gender: '',
-                headPic: '',
+                headPic: ''
             },
             // 是否只读
             isReadOnly: true,
@@ -54,6 +55,13 @@ export default {
     methods: {
         getUserInfo() {
             servers.post('/getUserInfo',{id:localStorage.getItem('id')}, (result) => {
+                console.log(result);
+                if(!result.headPic){
+                    result.headPic=defaultHead;
+                }
+                if(!result.nickname){
+                    result.nickname=localStorage.getItem("mobile");
+                }
                 this.userinfo.nickname = result.nickname;
                 this.userinfo.realname = result.realname;
                 this.userinfo.headPic = result.headPic;
