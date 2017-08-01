@@ -99,6 +99,11 @@
                             <el-menu-item index="8-1">选项1</el-menu-item>
                             <el-menu-item index="8-2">选项1</el-menu-item>
                         </el-submenu>
+                         <el-submenu index="9">
+                            <template slot="title">
+                                <i class="el-icon-time"></i>shopping</template>
+                            <el-menu-item index="/">购物车</el-menu-item>
+                        </el-submenu>
                     </el-menu-item-group>
                     <div class="hr"></div>
                 </el-menu>

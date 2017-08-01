@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import Hello from '@/components/Hello'
 import workbench from '@/view/workbench' //工作台
+import shoppingcart from '@/view/shoppingCart/shoppingCart'
 import checkinmanagement from '@/view/dailywork/assessmentManagement/checkinManagement' //入住评估
 import checkinedit from '@/view/dailywork/assessmentManagement/checkinEdit'
 import userinfo from '@/view/usercenter/userinfo'
@@ -25,6 +26,10 @@ export default new Router({
       path: '/usercenter/userinfo',
       name: 'userinfo',
       component: userinfo,
+    }, {
+      path: '/',
+      name: 'shoppingCart',
+      component: shoppingcart,
     }]
   }, {
     path: '/login',
