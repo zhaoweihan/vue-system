@@ -1,185 +1,231 @@
 @import '../../sass/common';
-.shoppingContainer {
+.shoppingCart {
   $baseColor: #b4a078;
   width: 1100px;
   margin: 50px auto; // 表头
-  .thead {
-    $height: 50px;
-    width: 100%;
-    height: $height;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    background-color: #f5f5f5;
-    ul {
-      height: 100%;
+  .shoppingContainer {
+    @include transition(all .3s);
+    .thead {
+      $height: 50px;
       width: 100%;
-      li {
-        float: left;
+      height: $height;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      background-color: #f5f5f5;
+      ul {
         height: 100%;
-        width: 143px;
-        text-align: center;
-        line-height: $height;
-        font-size: 12px;
-        &.allSelect {
-          width: 160px;
-          text-align: left;
-          padding-left: 20px;
-        }
-        &.goodsInfo {
-          width: 223px;
-          text-align: left;
-        }
-        .el-checkbox__label {
-          font-size: 12px;
-        }
-      }
-    }
-  } // 商品列表
-  .tbody {
-    width: 100%;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-    ul {
-      height: 100%;
-      width: 100%;
-      li {
         width: 100%;
-        height: 120px;
-        font-size: 0;
-        padding: 20px 0;
-        &+li {
-          border-top: 1px dashed #eaeaea;
-        }
-        .td {
-          position: relative;
-          width: 143px;
+        li {
+          float: left;
           height: 100%;
-          display: inline-block;
-          vertical-align: top;
+          width: 143px;
+          text-align: center;
+          line-height: $height;
           font-size: 12px;
           &.allSelect {
             width: 160px;
+            text-align: left;
+            padding-left: 20px;
           }
           &.goodsInfo {
             width: 223px;
+            text-align: left;
           }
-          .el-checkbox {
+          .el-checkbox__label {
+            font-size: 12px;
+          }
+        }
+      }
+    } // 商品列表
+    .tbody {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+      ul {
+        height: 100%;
+        width: 100%;
+        li {
+          width: 100%;
+          height: 120px;
+          font-size: 0;
+          padding: 20px 0;
+          &+li {
+            border-top: 1px dashed #eaeaea;
+          }
+          .td {
             position: relative;
-            top: 30px;
-            float: left;
-            margin: 0 20px;
-          }
-          .imgbox {
-            border: 1px solid #eaeaea;
-            float: left;
-            width: 80px;
-            height: 80px;
-          } // 商品名称
-          .goodsName {
-            margin: 10px 0;
-            a {
+            width: 143px;
+            height: 100%;
+            display: inline-block;
+            vertical-align: top;
+            font-size: 12px;
+            &.allSelect {
+              width: 160px;
+            }
+            &.goodsInfo {
+              width: 223px;
+            }
+            .el-checkbox {
+              position: relative;
+              top: 30px;
+              float: left;
+              margin: 0 20px;
+            }
+            .imgbox {
+              border: 1px solid #eaeaea;
+              float: left;
+              width: 80px;
+              height: 80px;
+              background: #f5f5f5;
+            } // 商品名称
+            .goodsName {
+              margin: 10px 0;
+              a {
+                font-size: 14px;
+                &:hover {
+                  color: $baseColor;
+                }
+              }
+            } // 商品颜色、类型
+            .goodsType {
+              a {
+                color: #999;
+                &:hover {
+                  color: $baseColor;
+                }
+                i {
+                  margin: 0 2px;
+                  vertical-align: middle;
+                }
+              }
+            } // 单价
+            .price {
               font-size: 14px;
-              &:hover {
-                color: $baseColor;
+              text-align: center;
+              margin-top: 10px;
+            } // 计数器
+            .el-input-number {
+              margin-left: 6px;
+            } // 小计
+            .subtotal {
+              color: #d4282d;
+            } // 操作
+            .operating {
+              text-align: center;
+              margin: 10px 0;
+              a {
+                &:hover {
+                  color: $baseColor;
+                }
               }
             }
-          } // 商品颜色、类型
-          .goodsType {
-            a {
-              color: #999;
-              &:hover {
-                color: $baseColor;
-              }
-              i {
-                margin: 0 2px;
-                vertical-align: middle;
-              }
-            }
-          } // 单价
-          .price {
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-          } // 计数器
-          .el-input-number {
-            margin-left: 6px;
-          } // 小计
-          .subtotal {
+          }
+        }
+      }
+    } //   下单框
+    .placeOrderBox {
+      width: 100%;
+      height: 66px;
+      border: 1px solid #ddd;
+      background-color: #f5f5f5;
+      .el-checkbox {
+        margin: 20px 0 0 20px;
+      }
+      .leftLink {
+        margin-left: 20px;
+        &:hover {
+          color: $baseColor;
+        }
+      }
+      p {
+        width: 500px;
+        float: right;
+        text-align: right;
+        padding-right: 20px;
+        &.countPrice {
+          color: #999;
+          margin-top: 5px;
+          .yfje {
+            color: #333;
+          }
+          .totalPrice {
+            font-weight: 700;
+            font-size: 22px;
             color: #d4282d;
-          } // 操作
-          .operating {
-            text-align: center;
-            margin: 10px 0;
-            a {
-              &:hover {
-                color: $baseColor;
-              }
+          }
+        }
+        &.freePost {
+          margin-top: -3px;
+          a {
+            color: #d4282d;
+            &:hover {
+              text-decoration: underline;
             }
           }
         }
-      }
-    }
-  } //   下单框
-  .placeOrderBox {
-    width: 100%;
-    height: 66px;
-    border: 1px solid #ddd;
-    background-color: #f5f5f5;
-    .el-checkbox {
-      margin: 20px 0 0 20px;
-    }
-    .leftLink {
-      margin-left: 20px;
-      &:hover {
-        color: $baseColor;
-      }
-    }
-    p {
-      width: 500px;
-      float: right;
-      text-align: right;
-      padding-right: 20px;
-      &.countPrice {
-        color: #999;
-        margin-top: 5px;
-        .yfje {
-          color: #333;
-        }
-        .totalPrice {
-          font-weight: 700;
-          font-size: 22px;
-          color: #d4282d;
-        }
-      }
-      &.freePost {
-        margin-top: -3px;
-        a {
-          color: #d4282d;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-      .rcPlace {
+        .rcPlace {
           display: inline-block;
-        width: 15px;
+          width: 15px;
+        }
+      }
+      .placeOrderBtn {
+        float: right;
+        width: 140px;
+        height: 100%;
+        border: 0;
+        color: #fff;
+        background: $baseColor;
+        font-size: 20px;
+        cursor: pointer;
+        &:hover {
+          background-color: #c0ae8a;
+        }
+        &[disabled] {
+          background: #ccc;
+          cursor: not-allowed;
+        }
       }
     }
-    .placeOrderBtn {
-      float: right;
-      width: 140px;
-      height: 100%;
-      border: 0;
-      color: #fff;
-      background: $baseColor;
-      font-size: 20px;
-      cursor: pointer;
-      &:hover {
-        background-color: #c0ae8a;
+  } // 购物车空的
+  .emptyBox {
+    $emptyBox-height: 500px;
+    width: 100%;
+    height: $emptyBox-height;
+    border: 1px solid #ddd;
+    text-align: center;
+    @include flex;
+    justify-content: center;
+    align-items: center;
+    @include transition(all .3s);
+    .padBox {
+      width: 300px;
+      height: 200px;
+      .imgbox {
+        margin: 20px auto;
+        width: 53px;
+        height: 50px;
+        background-image: url('//mimg.127.net/hxm/yanxuan-web/p/20150730/style/img/x1/cart-s60a1b1ed02-13bd136ac9.png');
+        background-repeat: no-repeat;
+        background-position: 0 -97px;
       }
-      &[disabled] {
-        background: #ccc;
-        cursor: not-allowed;
+      p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      button {
+        height: 40px;
+        width: 100px;
+        font-size: 16px;
+        line-height: 38px;
+        color: #b4a078;
+        border: 1px solid #b4a078;
+        background-color: #f5f3ef;
+        border-radius: 2px;
+        cursor: pointer;
+        &:hover {
+          border: 1px solid #c0ae8a;
+          background-color: #fff;
+        }
       }
     }
   }

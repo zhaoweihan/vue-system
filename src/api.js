@@ -2,7 +2,7 @@
  * @Author: zhaoweihan 
  * @Date: 2017-06-02 16:39:13 
  * @Last Modified by: zhaoweihan
- * @Last Modified time: 2017-06-02 17:31:55
+ * @Last Modified time: 2017-08-02 09:28:00
  */
 import Vue from 'vue';
 import axios from 'axios';
@@ -39,13 +39,13 @@ export const servers = {
    * @param {*成功回调} sucessCallback 
    * @param {*请求参数} dataParams 
    */
-  post(url, dataParams, sucessCallback,errorCallback) {
+  post(url, dataParams, sucessCallback, errorCallback) {
     axios.post(baseUrl + url, dataParams)
       .then(function (response) {
         const result = response.data;
         if (result.code == 200) {
           sucessCallback(result.data);
-        } else if(result.code>=6000){
+        } else if (result.code >= 6000) {
           errorCallback(result.msg);
         }
       })
@@ -63,3 +63,13 @@ export const servers = {
     })
   }
 }
+
+Array.prototype.deleteItemById = function (id) {
+  var i;
+  this.forEach((ele, index) => {
+    if (ele.id == id) {
+      i = index;
+    }
+  });
+  this.splice(i, 1);
+};
