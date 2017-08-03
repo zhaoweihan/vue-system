@@ -99,7 +99,7 @@
                             <el-menu-item index="8-1">选项1</el-menu-item>
                             <el-menu-item index="8-2">选项1</el-menu-item>
                         </el-submenu>
-                         <el-submenu index="9">
+                        <el-submenu index="9">
                             <template slot="title">
                                 <i class="el-icon-time"></i>shopping</template>
                             <el-menu-item index="/">购物车</el-menu-item>
@@ -120,7 +120,7 @@
     </div>
 </template>
 <script>
-import {servers} from '@/api'
+import { servers } from '@/api'
 import userinfmask from '@/components/userinfoMask'
 import store from '@/store'
 import defaultHead from '@/assets/defaultHead.svg'
@@ -130,7 +130,7 @@ export default {
             isFullscreen: false,//全屏状态
             infoMaskOpenStatus: false,//用户信息弹层状态
             menuCompressionStatus: false,//菜单收缩状态
-            search:''
+            search: ''
         }
     },
     methods: {
@@ -163,13 +163,13 @@ export default {
         /**
          * 获取登录用户信息
          */
-        getUserInfo(){
-            servers.post('/getUserInfo',{id:localStorage.getItem('id')},(result)=>{
-                if(!result.nickname){
-                    result.nickname=localStorage.getItem("mobile");
+        getUserInfo() {
+            servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
+                if (!result.nickname) {
+                    result.nickname = localStorage.getItem("mobile");
                 }
-                if(!result.headPic){
-                    result.headPic=defaultHead;
+                if (!result.headPic) {
+                    result.headPic = defaultHead;
                 }
                 store.commit('setNickName', result.nickname);
                 store.commit('setHeadPic', result.headPic);
@@ -182,8 +182,8 @@ export default {
             this.infoMaskOpenStatus ? this.infoMaskOpenStatus = false : this.infoMaskOpenStatus = true;
         },
         // 关闭遮罩层
-        hideMask(){
-            this.infoMaskOpenStatus=false;
+        hideMask() {
+            this.infoMaskOpenStatus = false;
         },
         //隐藏左侧导航菜单
         compression() {
@@ -203,10 +203,10 @@ export default {
             // })
             return store.state.breadCrumbs;
         },
-        nickname(){
+        nickname() {
             return store.state.nickname;
         },
-        headPic(){
+        headPic() {
             return store.state.headPic;
         }
     },
@@ -223,7 +223,20 @@ export default {
                 }
             });
 
-        }else{
+        } else {
+            // 监听 全屏事件
+            document.addEventListener("fullscreenchange", function () {
+                self.isFullscreen = document.fullscreen;
+            }, false);
+            document.addEventListener("webkitfullscreenchange", function () {
+                self.isFullscreen = document.webkitIsFullScreen;
+            }, false);
+            document.addEventListener("mozfullscreenchange", function () {
+                self.isFullscreen = document.mozFullScreen;
+            }, false);
+            document.addEventListener("msfullscreenchange", function () {
+                self.isFullscreen = document.msFullscreenElement;
+            }, false);
             this.getUserInfo();
         }
     },
