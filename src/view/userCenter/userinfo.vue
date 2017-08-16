@@ -6,7 +6,7 @@
         </h2>
         <el-form ref="userinfo" :model="userinfo" label-width="80px" :rules="rules">
             <span class="yhtx">用户头像</span>
-            <el-upload class="avatar-uploader" :disabled="isReadOnly" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-error="handleAvatarError" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <el-upload class="avatar-uploader" :disabled="isReadOnly" :data="uploadHeadImgData" action="http://upload-z1.qiniu.com" :show-file-list="false" :on-error="handleAvatarError" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                 <img v-if="userinfo.headPic" :src="userinfo.headPic" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -37,6 +37,10 @@ import defaultHead from '@/assets/defaultHead2.svg'
 export default {
     data() {
         return {
+            uploadHeadImgData: {
+                id: localStorage.getItem("id"),
+                token: ""
+            },
             userinfo: {
                 nickname: '',
                 realname: '',
@@ -54,25 +58,31 @@ export default {
     },
     methods: {
         getUserInfo() {
-            servers.post('/getUserInfo',{id:localStorage.getItem('id')}, (result) => {
-                console.log(result);
-                if(!result.headPic){
-                    result.headPic=defaultHead;
+            servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
+                if (!result.headPic) {
+                    result.headPic = defaultHead;
                 }
-                if(!result.nickname){
-                    result.nickname=localStorage.getItem("mobile");
+                if (!result.nickname) {
+                    result.nickname = localStorage.getItem("mobile");
                 }
                 this.userinfo.nickname = result.nickname;
                 this.userinfo.realname = result.realname;
                 this.userinfo.headPic = result.headPic;
                 this.userinfo.gender = result.gender;
+                // 获取上传头像的token
+                this.getUploadToken();
             })
         },
         handleAvatarSuccess(res, file) {
-            this.userinfo.headPic = URL.createObjectURL(file.raw);
+            // this.userinfo.headPic = URL.createObjectURL(file.raw);
+            this.userinfo.headPic = 'http://oupf1bxll.bkt.clouddn.com/' + res.key;
+            this.$message({
+                message: '上传成功',
+                type: 'success'
+            });
         },
         handleAvatarError(err, file) {
-            this.userinfo.headPic = URL.createObjectURL(file.raw);
+            this.$message.error('上传失败，请重新上传');
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
@@ -122,6 +132,12 @@ export default {
                     this.isReadOnly = true;
 
             }
+        },
+        getUploadToken() {
+            var self = this;
+            servers.post("/getQiniuToken", { id: localStorage.getItem("id"), fileName: self.userinfo.headPic }, (result) => {
+                this.uploadHeadImgData.token = result.uploadToken
+            })
         }
     },
     created() {
