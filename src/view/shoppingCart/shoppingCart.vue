@@ -14,7 +14,7 @@
                     <li>操作</li>
                 </ul>
             </div>
-            <div class="tbody" >
+            <div class="tbody">
                 <ul class="goodsList">
                     <li v-for="goods in goodsList" :key="goods.id">
                         <div class="td allSelect">
@@ -38,7 +38,7 @@
                         <div class="td">
                             <p class="price">¥{{goods.price|priceFilter}}</p>
                         </div>
-    
+
                         <div class="td">
                             <el-input-number v-model="goods.num" :min="1" :max="50" size="small"></el-input-number>
                         </div>
@@ -46,7 +46,7 @@
                             <p class="price subtotal">¥{{goods.price*goods.num|priceFilter}}</p>
                         </div>
                         <div class="td"></div>
-    
+
                         <div class="td">
                             <p class="operating">
                                 <a href="javascript:;">移入收藏夹</a>
@@ -54,7 +54,7 @@
                             <p class="operating">
                                 <a href="javascript:;" @click="deleteGoods(goods.id)">删除</a>
                             </p>
-    
+
                         </div>
                     </li>
                 </ul>
@@ -83,6 +83,35 @@
                 <button @click="getGoodsList()">继续逛</button>
             </div>
         </div>
+        <!-- 猜你喜欢 -->
+        <div class="guessLike" v-if="guessLike.length">
+            <div class="guesslike-head">
+                <span>猜你喜欢</span>
+            </div>
+            <div class="guesslike-body">
+                <button class="navBtn prevBtn" @click="changeGuesslike(1)" :class="{disabled:guessType==1}" :disabled="guessType==1"></button>
+                <button class="navBtn nextBtn" @click="changeGuesslike(2)" :class="{disabled:guessType==2}" :disabled="guessType==2"></button>
+                <div class="goodslist-container">
+                    <ul :class="{toRight:guessType==2}">
+                        <li v-for="(goods,index) in guessLike" :key="index">
+                            <div class="goodsImg">
+                                <a href="javascript:;">
+                                    <img :src="goods.imgUrl">
+                                </a>
+                                <span class="tag" v-if="goods.imgTag">{{goods.imgTag}}</span>
+                            </div>
+                            <p class="prdtTags">
+                                <span v-if="goods.prdtTags">{{goods.prdtTags}}</span>
+                            </p>
+                            <p class="goodsName">
+                                <a href="javascript:;">{{goods.name}}</a>
+                            </p>
+                            <p class="goodsPrice">¥{{goods.price|priceFilter}}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -93,7 +122,9 @@ export default {
         return {
             allChecked: false,// 是否全选
             discountedPprices: 1000,//优惠价格
-            goodsList: []
+            goodsList: [],
+            guessLike: [],
+            guessType: 1,
         }
     },
     methods: {
@@ -108,9 +139,9 @@ export default {
             store.commit('defineBreadCrumbs', list)
         },
         // getlist
-        getGoodsList(){
-            servers.post("/shoppingCartGoodsList",{},(result)=>{
-                this.goodsList=result.goodsList;
+        getGoodsList() {
+            servers.post("/shoppingCartGoodsList", {}, (result) => {
+                this.goodsList = result.goodsList;
             })
         },
         // 下单
@@ -162,6 +193,19 @@ export default {
                     this.goodsList.deleteItemById(item);
                 })
             })
+        },
+        // 获取 猜你喜欢 数据
+        getGuessLike() {
+            servers.post("/guessLike", {}, (result) => {
+                result.guessLike.forEach((ele) => {
+                    ele.imgUrl = result.guessLikeBaseUrl[0] + ele.imgUrl + result.guessLikeBaseUrl[1]
+                })
+                this.guessLike = result.guessLike;
+            })
+        },
+        // 切换 猜你喜欢  
+        changeGuesslike(type) {
+            this.guessType = type;
         }
     },
     computed: {
@@ -203,6 +247,7 @@ export default {
     created() {
         this.setBreadCrumbs()
         this.getGoodsList()
+        this.getGuessLike()
     },
     filters: {
         priceFilter(val) {
