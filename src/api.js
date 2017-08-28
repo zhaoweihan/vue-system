@@ -2,7 +2,7 @@
  * @Author: zhaoweihan 
  * @Date: 2017-06-02 16:39:13 
  * @Last Modified by: zhaoweihan
- * @Last Modified time: 2017-08-02 09:28:00
+ * @Last Modified time: 2017-08-21 11:23:14
  */
 import Vue from 'vue';
 import axios from 'axios';
@@ -63,7 +63,7 @@ export const servers = {
     })
   }
 }
-
+// 删除数组指定元素
 Array.prototype.deleteItemById = function (id) {
   var i;
   this.forEach((ele, index) => {
@@ -73,3 +73,10 @@ Array.prototype.deleteItemById = function (id) {
   });
   this.splice(i, 1);
 };
+//判断数组是否包换某个元素
+Array.prototype.contains = function (needle) {
+  for (let i in this) {
+    if (this[i] == needle) return true;
+  }
+  return false;
+}
