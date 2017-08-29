@@ -89,10 +89,10 @@
                 <span>猜你喜欢</span>
             </div>
             <div class="guesslike-body">
-                <button class="navBtn prevBtn" @click="changeGuesslike(1)" :class="{disabled:guessType==1}" :disabled="guessType==1"></button>
-                <button class="navBtn nextBtn" @click="changeGuesslike(2)" :class="{disabled:guessType==2}" :disabled="guessType==2"></button>
+                <button class="navBtn prevBtn" @click="changeGuesslike(1)" :class="{disabled:nowGuessPage==1}" :disabled="nowGuessPage==1"></button>
+                <button class="navBtn nextBtn" @click="changeGuesslike(2)" :class="{disabled:nowGuessPage==mostGuessPage}" :disabled="nowGuessPage==mostGuessPage"></button>
                 <div class="goodslist-container">
-                    <ul :class="{toRight:guessType==2}">
+                    <ul :style="'transform:translateX('+(nowGuessPage-1)*-930+'px);-webkit-transform:translateX('+(nowGuessPage-1)*-930+');width:'+mostGuessPage*930+'px;'">
                         <li v-for="(goods,index) in guessLike" :key="index">
                             <div class="goodsImg">
                                 <a href="javascript:;">
@@ -124,7 +124,8 @@ export default {
             discountedPprices: 1000,//优惠价格
             goodsList: [],
             guessLike: [],
-            guessType: 1,
+            nowGuessPage: 1,
+            mostGuessPage: 1,
         }
     },
     methods: {
@@ -200,12 +201,17 @@ export default {
                 result.guessLike.forEach((ele) => {
                     ele.imgUrl = result.guessLikeBaseUrl[0] + ele.imgUrl + result.guessLikeBaseUrl[1]
                 })
+                this.mostGuessPage = Math.ceil(result.guessLike.length / 4);
                 this.guessLike = result.guessLike;
             })
         },
         // 切换 猜你喜欢  
         changeGuesslike(type) {
-            this.guessType = type;
+            if (type == 1) {//上一页
+                this.nowGuessPage--;
+            } else {//下一页
+                this.nowGuessPage++;
+            }
         }
     },
     computed: {
