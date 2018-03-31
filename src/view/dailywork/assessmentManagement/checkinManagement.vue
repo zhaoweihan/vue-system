@@ -27,7 +27,7 @@
           <el-table-column prop="contactPerson" label="联系人" width="100"></el-table-column>
           <el-table-column prop="contactMobile" label="联系电话"></el-table-column>
           <el-table-column prop="operate" label="操作">
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
