@@ -6,7 +6,15 @@ var vueLoaderConfig = require('./vue-loader.conf')
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-
+var eslintRule = {
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter')
+  }
+}
 module.exports = {
   entry: {
     app: './src/main.js'
@@ -28,6 +36,7 @@ module.exports = {
   },
   module: {
     rules: [
+      eslintRule,
       {
         test: /\.vue$/,
         loader: 'vue-loader',

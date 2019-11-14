@@ -139,11 +139,11 @@ export default {
             if (!this.isFullscreen) {
                 this.isFullscreen = true;
                 const docElm = document.documentElement;
-                if (docElm.requestFullscreen) { //W3C  
+                if (docElm.requestFullscreen) { //W3C
                     docElm.requestFullscreen();
-                } else if (docElm.mozRequestFullScreen) {//FireFox  
+                } else if (docElm.mozRequestFullScreen) {//FireFox
                     docElm.mozRequestFullScreen();
-                } else if (docElm.webkitRequestFullScreen) {//Chrome等  
+                } else if (docElm.webkitRequestFullScreen) {//Chrome等
                     docElm.webkitRequestFullScreen();
                 } else if (elem.msRequestFullscreen) { //IE11
                     elem.msRequestFullscreen();
@@ -208,7 +208,7 @@ export default {
             return store.state.nickname;
         },
         headPic() {
-            return store.state.headPic;
+            return store.state.headPic||defaultHead;
         }
     },
     created() {
