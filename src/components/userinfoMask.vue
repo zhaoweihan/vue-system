@@ -31,31 +31,31 @@
 <script>
 import store from '@/store'
 export default {
-    data() {
-        return {
-            msg: '用户信息弹层',
-        }
+  data () {
+    return {
+      msg: '用户信息弹层'
+    }
+  },
+  methods: {
+    signOut () {
+      this.$confirm('确定退出系统', '退出', {
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('mobile')
+        this.$router.push('/login')
+      }).catch(() => { })
+    }
+  },
+  computed: {
+    realname () {
+      return store.state.realname
     },
-    methods: {
-        signOut() {
-            this.$confirm('确定退出系统', '退出', {
-                type: "warning"
-            }).then(() => {
-                localStorage.removeItem("mobile");
-                this.$router.push('/login');
-            }).catch(() => { });
-        }
-    },
-    computed:{
-        realname(){
-            return store.state.realname;
-        },
-        gender(){
-            return store.state.gender;
-        }
+    gender () {
+      return store.state.gender
+    }
 
-    },
-    props: ['openStatus']
+  },
+  props: ['openStatus']
 }
 </script>
 <style scoped lang="scss">
@@ -110,5 +110,3 @@ export default {
     }
 }
 </style>
-
-

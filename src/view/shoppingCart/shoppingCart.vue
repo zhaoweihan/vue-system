@@ -118,152 +118,149 @@
 import { servers } from '@/api'
 import store from '@/store'
 export default {
-    data() {
-        return {
-            allChecked: false,// 是否全选
-            discountedPprices: 1000,//优惠价格
-            goodsList: [],
-            guessLike: [],
-            nowGuessPage: 1,
-            mostGuessPage: 1,
-        }
-    },
-    methods: {
-        setBreadCrumbs() {
-            var list = [{
-                name: '购物',
-                url: null,
-            }, {
-                name: '购物车',
-                url: null
-            }]
-            store.commit('defineBreadCrumbs', list)
-        },
-        // getlist
-        getGoodsList() {
-            servers.post("/shoppingCartGoodsList", {}, (result) => {
-                this.goodsList = result.goodsList;
-            })
-        },
-        // 下单
-        placeOrderHandle() {
-            this.$message('下单了');
-        },
-        // 全选
-        allCheckedHandle() {
-            this.goodsList.forEach((ele) => {
-                if (this.allChecked) {
-                    ele.isChecked = true;
-                } else {
-                    ele.isChecked = false;
-                }
-            })
-        },
-        //商品列表勾选
-        goodsCheckedHandle(ic) {
-            if (ic) {
-                this.allChecked = this.goodsList.every((element) => {
-                    return element.isChecked
-                }, this);
-            } else {
-                this.allChecked = false;
-            }
-        },
-        // 删除商品
-        deleteGoods(id) {
-            this.goodsList.deleteItemById(id);
-        },
-        // 批量删除
-        batchDelete() {
-            var isCheckedKeys = true;
-            var arr = []
-            this.goodsList.forEach((ele, index) => {
-                if (ele.isChecked) {
-                    isCheckedKeys = false;
-                    arr.push(ele.id);
-                }
-            })
-            if (isCheckedKeys) {
-                this.$message.error('请选择商品');
-                return;
-            }
-            this.$confirm('确定删除所选商品吗？', '提示', {
-                type: 'warning'
-            }).then(() => {
-                arr.forEach((item, i) => {
-                    this.goodsList.deleteItemById(item);
-                })
-            })
-        },
-        // 获取 猜你喜欢 数据
-        getGuessLike() {
-            servers.post("/guessLike", {}, (result) => {
-                result.guessLike.forEach((ele) => {
-                    ele.imgUrl = result.guessLikeBaseUrl[0] + ele.imgUrl + result.guessLikeBaseUrl[1]
-                })
-                this.mostGuessPage = Math.ceil(result.guessLike.length / 4);
-                this.guessLike = result.guessLike;
-            })
-        },
-        // 切换 猜你喜欢  
-        changeGuesslike(type) {
-            if (type == 1) {//上一页
-                this.nowGuessPage--;
-            } else {//下一页
-                this.nowGuessPage++;
-            }
-        }
-    },
-    computed: {
-        totalPrice() {
-            var total = 0;
-            this.goodsList.forEach((element) => {
-                if (element.isChecked) {
-                    total += element.price * element.num;
-                }
-            }, this);
-            return total;
-        },
-        actualPrice() {
-            var actualPrice = 0;
-            if (this.totalPrice > this.discountedPprices) {
-                actualPrice = this.totalPrice - this.discountedPprices;
-            }
-            return actualPrice;
-        },
-        allCheckedWord() {
-            var word = "全选";
-            var totalNum = 0;
-            if (!this.allChecked) {
-                this.goodsList.forEach((ele) => {
-                    if (ele.isChecked) {
-                        totalNum += ele.num;
-                    }
-                });
-                if (totalNum) {
-                    word = "已选( " + totalNum + " )";
-                } else {
-                    word = "全选";
-                }
-
-            }
-            return word
-        }
-    },
-    created() {
-        this.setBreadCrumbs()
-        this.getGoodsList()
-        this.getGuessLike()
-    },
-    filters: {
-        priceFilter(val) {
-            return (val / 100).toFixed(2);
-        }
+  data () {
+    return {
+      allChecked: false, // 是否全选
+      discountedPprices: 1000, // 优惠价格
+      goodsList: [],
+      guessLike: [],
+      nowGuessPage: 1,
+      mostGuessPage: 1
     }
+  },
+  methods: {
+    setBreadCrumbs () {
+      var list = [{
+        name: '购物',
+        url: null
+      }, {
+        name: '购物车',
+        url: null
+      }]
+      store.commit('defineBreadCrumbs', list)
+    },
+    // getlist
+    getGoodsList () {
+      servers.post('/shoppingCartGoodsList', {}, (result) => {
+        this.goodsList = result.goodsList
+      })
+    },
+    // 下单
+    placeOrderHandle () {
+      this.$message('下单了')
+    },
+    // 全选
+    allCheckedHandle () {
+      this.goodsList.forEach((ele) => {
+        if (this.allChecked) {
+          ele.isChecked = true
+        } else {
+          ele.isChecked = false
+        }
+      })
+    },
+    // 商品列表勾选
+    goodsCheckedHandle (ic) {
+      if (ic) {
+        this.allChecked = this.goodsList.every((element) => {
+          return element.isChecked
+        }, this)
+      } else {
+        this.allChecked = false
+      }
+    },
+    // 删除商品
+    deleteGoods (id) {
+      this.goodsList.deleteItemById(id)
+    },
+    // 批量删除
+    batchDelete () {
+      var isCheckedKeys = true
+      var arr = []
+      this.goodsList.forEach((ele, index) => {
+        if (ele.isChecked) {
+          isCheckedKeys = false
+          arr.push(ele.id)
+        }
+      })
+      if (isCheckedKeys) {
+        this.$message.error('请选择商品')
+        return
+      }
+      this.$confirm('确定删除所选商品吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+        arr.forEach((item, i) => {
+          this.goodsList.deleteItemById(item)
+        })
+      })
+    },
+    // 获取 猜你喜欢 数据
+    getGuessLike () {
+      servers.post('/guessLike', {}, (result) => {
+        result.guessLike.forEach((ele) => {
+          ele.imgUrl = result.guessLikeBaseUrl[0] + ele.imgUrl + result.guessLikeBaseUrl[1]
+        })
+        this.mostGuessPage = Math.ceil(result.guessLike.length / 4)
+        this.guessLike = result.guessLike
+      })
+    },
+    // 切换 猜你喜欢
+    changeGuesslike (type) {
+      if (type === 1) { // 上一页
+        this.nowGuessPage--
+      } else { // 下一页
+        this.nowGuessPage++
+      }
+    }
+  },
+  computed: {
+    totalPrice () {
+      var total = 0
+      this.goodsList.forEach((element) => {
+        if (element.isChecked) {
+          total += element.price * element.num
+        }
+      }, this)
+      return total
+    },
+    actualPrice () {
+      var actualPrice = 0
+      if (this.totalPrice > this.discountedPprices) {
+        actualPrice = this.totalPrice - this.discountedPprices
+      }
+      return actualPrice
+    },
+    allCheckedWord () {
+      var word = '全选'
+      var totalNum = 0
+      if (!this.allChecked) {
+        this.goodsList.forEach((ele) => {
+          if (ele.isChecked) {
+            totalNum += ele.num
+          }
+        })
+        if (totalNum) {
+          word = '已选( ' + totalNum + ' )'
+        } else {
+          word = '全选'
+        }
+      }
+      return word
+    }
+  },
+  created () {
+    this.setBreadCrumbs()
+    this.getGoodsList()
+    this.getGuessLike()
+  },
+  filters: {
+    priceFilter (val) {
+      return (val / 100).toFixed(2)
+    }
+  }
 }
 </script>
 <style lang="scss">
 @import '../../sass/shoppingCart';
 </style>
-
-

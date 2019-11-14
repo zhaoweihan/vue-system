@@ -35,114 +35,110 @@ import store from '@/store'
 import { servers } from '@/api'
 import defaultHead from '@/assets/defaultHead2.svg'
 export default {
-    data() {
-        return {
-            uploadHeadImgData: {
-                id: localStorage.getItem("id"),
-                token: ""
-            },
-            userinfo: {
-                nickname: '',
-                realname: '',
-                mobile: localStorage.getItem("mobile"),
-                gender: '',
-                headPic: ''
-            },
-            // 是否只读
-            isReadOnly: true,
-            rules: {
-                nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
-                realname: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
-            }
-        }
-    },
-    methods: {
-        getUserInfo() {
-            servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
-                if (!result.headPic) {
-                    result.headPic = defaultHead;
-                }
-                if (!result.nickname) {
-                    result.nickname = localStorage.getItem("mobile");
-                }
-                this.userinfo.nickname = result.nickname;
-                this.userinfo.realname = result.realname;
-                this.userinfo.headPic = result.headPic;
-                this.userinfo.gender = result.gender;
-                // 获取上传头像的token
-                this.getUploadToken();
-            })
-        },
-        handleAvatarSuccess(res, file) {
-            // this.userinfo.headPic = URL.createObjectURL(file.raw);
-            this.userinfo.headPic = 'http://oupf1bxll.bkt.clouddn.com/' + res.key;
-            this.$message({
-                message: '上传成功',
-                type: 'success'
-            });
-        },
-        handleAvatarError(err, file) {
-            this.$message.error('上传失败，请重新上传');
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isPNG = file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-
-            if (!isJPG && !isPNG) {
-                this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            return (isJPG || isPNG) && isLt2M;
-        },
-        //编辑个人信息
-        edit() {
-            this.isReadOnly = false;
-        },
-        saveinfo(type) {
-            if (type) {
-                this.$refs['userinfo'].validate((valid) => {
-                    if (valid) {
-                        servers.post('/updateUserInfo', { id: localStorage.getItem('id'), userinfo: this.userinfo }, (result) => {
-                            store.commit('setNickName', this.userinfo.nickname);
-                            store.commit('setHeadPic', this.userinfo.headPic);
-                            store.commit('setRealName', this.userinfo.realname);
-                            store.commit('setGender', this.userinfo.gender);
-                            this.$message({
-                                message: '保存成功！',
-                                type: 'success'
-                            });
-                            this.isReadOnly = true;
-                        })
-
-                    }
-
-                });
-
-            } else {
-                this.userinfo = {
-                    nickname: store.state.nickname,
-                    realname: store.state.realname,
-                    gender: store.state.gender,
-                    mobile: localStorage.getItem("mobile"),
-                    headPic: store.state.headPic,
-                },
-                    this.isReadOnly = true;
-
-            }
-        },
-        getUploadToken() {
-            var self = this;
-            servers.post("/getQiniuToken", { id: localStorage.getItem("id"), fileName: self.userinfo.headPic }, (result) => {
-                this.uploadHeadImgData.token = result.uploadToken
-            })
-        }
-    },
-    created() {
-        this.getUserInfo();
+  data () {
+    return {
+      uploadHeadImgData: {
+        id: localStorage.getItem('id'),
+        token: ''
+      },
+      userinfo: {
+        nickname: '',
+        realname: '',
+        mobile: localStorage.getItem('mobile'),
+        gender: '',
+        headPic: ''
+      },
+      // 是否只读
+      isReadOnly: true,
+      rules: {
+        nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+        realname: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }]
+      }
     }
+  },
+  methods: {
+    getUserInfo () {
+      servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
+        if (!result.headPic) {
+          result.headPic = defaultHead
+        }
+        if (!result.nickname) {
+          result.nickname = localStorage.getItem('mobile')
+        }
+        this.userinfo.nickname = result.nickname
+        this.userinfo.realname = result.realname
+        this.userinfo.headPic = result.headPic
+        this.userinfo.gender = result.gender
+        // 获取上传头像的token
+        this.getUploadToken()
+      })
+    },
+    handleAvatarSuccess (res, file) {
+      // this.userinfo.headPic = URL.createObjectURL(file.raw);
+      this.userinfo.headPic = 'http://oupf1bxll.bkt.clouddn.com/' + res.key
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      })
+    },
+    handleAvatarError () {
+      this.$message.error('上传失败，请重新上传')
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传头像图片只能是 JPG或PNG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return (isJPG || isPNG) && isLt2M
+    },
+    // 编辑个人信息
+    edit () {
+      this.isReadOnly = false
+    },
+    saveinfo (type) {
+      if (type) {
+        this.$refs['userinfo'].validate((valid) => {
+          if (valid) {
+            servers.post('/updateUserInfo', { id: localStorage.getItem('id'), userinfo: this.userinfo }, (result) => {
+              store.commit('setNickName', this.userinfo.nickname)
+              store.commit('setHeadPic', this.userinfo.headPic)
+              store.commit('setRealName', this.userinfo.realname)
+              store.commit('setGender', this.userinfo.gender)
+              this.$message({
+                message: '保存成功！',
+                type: 'success'
+              })
+              this.isReadOnly = true
+            })
+          }
+        })
+      } else {
+        this.userinfo = {
+          nickname: store.state.nickname,
+          realname: store.state.realname,
+          gender: store.state.gender,
+          mobile: localStorage.getItem('mobile'),
+          headPic: store.state.headPic
+        }
+        this.isReadOnly = true
+      }
+    },
+    getUploadToken () {
+      var self = this
+      servers.post('/getQiniuToken', { id: localStorage.getItem('id'), fileName: self.userinfo.headPic }, (result) => {
+        this.uploadHeadImgData.token = result.uploadToken
+      })
+    }
+  },
+  created () {
+    this.getUserInfo()
+  }
 }
 </script>
 <style  lang="scss">
@@ -203,5 +199,3 @@ export default {
     }
 }
 </style>
-
-

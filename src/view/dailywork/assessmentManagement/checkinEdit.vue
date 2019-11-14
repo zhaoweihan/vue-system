@@ -30,11 +30,11 @@
                 <el-form-item label="预约电话：">
                     <el-input type="tel" v-model="forms.phoneNum" :maxlength="11" placeholder="请填写预约电话"></el-input>
                 </el-form-item>
-    
+
                 <div class="submit">
                     <el-button type="primary" size="large" @click="onSubmit">保 存</el-button>
                 </div>
-    
+
             </el-form>
         </el-col>
         <el-col :span="15">
@@ -50,100 +50,99 @@
 import store from '@/store'
 import { servers } from '@/api'
 export default {
-    data() {
-        return {
-            forms: {
-                name: '',
-                gender: '',
-                age: '',
-                idNumber: '',
-                reservateTime: '',
-                contactPerson: '',
-                phoneNum: '',
-            },
-            form: {},
-            pickerOptions1: {
-                shortcuts: [{
-                    text: '今天',
-                    onClick(picker) {
-                        picker.$emit('pick', new Date());
-                    }
-                }, {
-                    text: '昨天',
-                    onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24);
-                        picker.$emit('pick', date);
-                    }
-                }, {
-                    text: '一周前',
-                    onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                        picker.$emit('pick', date);
-                    }
-                }]
-            },
-        }
-    },
-    methods: {
-        init() {
-            if (this.$route.params.id != "add") {
-                servers.post('/getCheckinAssessItem', { id: this.$route.params.id }, (result) => {
-                     this.forms=result;
-                })
-            }
-        },
-        setBreadCrumbs() {
-            var list = [{
-                name: '评估管理',
-                url: null,
-            }, {
-                name: '入住评估',
-                url: '/dailywork/checkinManagement'
-            }, {
-                name: '评估编辑',
-                url: null
-            }]
-            store.commit('defineBreadCrumbs', list)
-        },
-        onSubmit(submitKey = true) {
-            const self = this;
-            for (var key in this.forms) {
-                if (this.forms[key] == "") {
-                    submitKey = false;
-                }
-            }
-            if (submitKey) {
-                let type;
-                let id;
-                if (this.$route.params.id != "add") {//修改
-                    type = 1;
-                    id = this.$route.params.id;
-                } else {//新建
-                    type = 0;
-                    id = null
-                }
-                servers.post('/updateCheckinAssessItem', { type: type, id: id, formdata: this.forms }, (result) => {
-                    this.$message({
-                        message: '恭喜你，保存成功！',
-                        type: 'success',
-                        duration:1000,
-                        onClose(){
-                            self.$router.push('/dailywork/checkinManagement')
-                        }
-                    });
-                })
-
-            } else {
-                this.$message.error('所有输入项必须全部完成');
-            }
-        }
-    },
-    created() {
-        this.init();
-        this.setBreadCrumbs();
+  data () {
+    return {
+      forms: {
+        name: '',
+        gender: '',
+        age: '',
+        idNumber: '',
+        reservateTime: '',
+        contactPerson: '',
+        phoneNum: ''
+      },
+      form: {},
+      pickerOptions1: {
+        shortcuts: [{
+          text: '今天',
+          onClick (picker) {
+            picker.$emit('pick', new Date())
+          }
+        }, {
+          text: '昨天',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: '一周前',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
+          }
+        }]
+      }
     }
+  },
+  methods: {
+    init () {
+      if (this.$route.params.id !== 'add') {
+        servers.post('/getCheckinAssessItem', { id: this.$route.params.id }, (result) => {
+          this.forms = result
+        })
+      }
+    },
+    setBreadCrumbs () {
+      var list = [{
+        name: '评估管理',
+        url: null
+      }, {
+        name: '入住评估',
+        url: '/dailywork/checkinManagement'
+      }, {
+        name: '评估编辑',
+        url: null
+      }]
+      store.commit('defineBreadCrumbs', list)
+    },
+    onSubmit (submitKey = true) {
+      const self = this
+      for (var key in this.forms) {
+        if (this.forms[key] === '') {
+          submitKey = false
+        }
+      }
+      if (submitKey) {
+        let type
+        let id
+        if (this.$route.params.id !== 'add') { // 修改
+          type = 1
+          id = this.$route.params.id
+        } else { // 新建
+          type = 0
+          id = null
+        }
+        servers.post('/updateCheckinAssessItem', { type: type, id: id, formdata: this.forms }, (result) => {
+          this.$message({
+            message: '恭喜你，保存成功！',
+            type: 'success',
+            duration: 1000,
+            onClose () {
+              self.$router.push('/dailywork/checkinManagement')
+            }
+          })
+        })
+      } else {
+        this.$message.error('所有输入项必须全部完成')
+      }
+    }
+  },
+  created () {
+    this.init()
+    this.setBreadCrumbs()
+  }
 }
 </script>
 <style  lang="scss">
@@ -167,5 +166,3 @@ export default {
     }
 }
 </style>
-
-

@@ -10,11 +10,11 @@
           <el-button type="primary" icon="search" size="small" @click="getTableList()">查询</el-button>
           <el-button type="danger" icon="delete2" size="small" @click="empty()">清空</el-button>
           <el-button type="warning" icon="plus" size="small" @click="goAddItem()">添加</el-button>
-  
+
           <div class="rightArea">
             <!--右浮动操作区域-->
           </div>
-  
+
         </div>
         <!--表格-->
         <el-table :data="tableData" :stripe="true">
@@ -38,38 +38,38 @@
       </el-tab-pane>
       <el-tab-pane label="面评" name="second"></el-tab-pane>
     </el-tabs>
-  
+
   </div>
 </template>
 <script>
 import { servers } from '../../../api'
 import store from '@/store'
 export default {
-  data() {
+  data () {
     return {
-      tabsActiveName: "first",
-      tableData: [],//表格数据
-      idNumber: "",//筛选条件：身份证号
-      selectName: "",//筛选条件：预住人员姓名
-      totalCount: 0,//列表总条数
-      currentPage: 1,//当前页码
-      pageSize: 2,//每页条数
+      tabsActiveName: 'first',
+      tableData: [], // 表格数据
+      idNumber: '', // 筛选条件：身份证号
+      selectName: '', // 筛选条件：预住人员姓名
+      totalCount: 0, // 列表总条数
+      currentPage: 1, // 当前页码
+      pageSize: 2 // 每页条数
     }
   },
   methods: {
-    getTableList() {
-      servers.post('/checkinAssessList', { currentPage: this.currentPage, pageSize: this.pageSize,filterName:this.selectName,filterNum:this.idNumber }, (result) => {
-        result.list.forEach(function(element) {
-          element.reservationTime=element.reservationTime.split("T")[0];
-        }, this);
-        this.tableData = result.list;
-        this.totalCount = result.totalCount;
-      });
+    getTableList () {
+      servers.post('/checkinAssessList', { currentPage: this.currentPage, pageSize: this.pageSize, filterName: this.selectName, filterNum: this.idNumber }, (result) => {
+        result.list.forEach(function (element) {
+          element.reservationTime = element.reservationTime.split('T')[0]
+        }, this)
+        this.tableData = result.list
+        this.totalCount = result.totalCount
+      })
     },
-    setBreadCrumbs() {
+    setBreadCrumbs () {
       var list = [{
         name: '评估管理',
-        url: null,
+        url: null
       }, {
         name: '入住评估',
         url: null
@@ -77,49 +77,48 @@ export default {
       store.commit('defineBreadCrumbs', list)
     },
     // 切换tab
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick (tab, event) {
+      console.log(tab, event)
     },
     // 编辑信息
-    handleEdit(index, row) {
-      this.$router.push('/dailywork/checkinEdit/' + row.id);
+    handleEdit (index, row) {
+      this.$router.push('/dailywork/checkinEdit/' + row.id)
     },
     // 删除信息
-    handleDelete(index, row) {
+    handleDelete (index, row) {
       this.$confirm('确认删除此条信息?', '删除信息', {
         confirmButtonText: '朕恩准了',
         cancelButtonText: '容朕三思',
         type: 'warning'
       }).then(() => {
         servers.post('/deleteCheckAssessItem', { id: row.id }, (result) => {
-          this.getTableList();
+          this.getTableList()
           this.$message({
             type: 'success',
             message: '删除成功!'
-          });
+          })
         })
-
-      }).catch(() => { });
+      }).catch(() => { })
     },
     // 清空查询
-    empty() {
-      this.selectName = '';
-      this.idNumber = '';
-      this.getTableList();
+    empty () {
+      this.selectName = ''
+      this.idNumber = ''
+      this.getTableList()
     },
     // 跳转edit页面
-    goAddItem() {
-      this.$router.push('/dailywork/checkinEdit/add');
+    goAddItem () {
+      this.$router.push('/dailywork/checkinEdit/add')
     },
     // 切换分页
-    handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
-      this.getTableList();
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+      this.getTableList()
     }
   },
-  created() {
-    this.getTableList();
-    this.setBreadCrumbs();
+  created () {
+    this.getTableList()
+    this.setBreadCrumbs()
   }
 }
 </script>

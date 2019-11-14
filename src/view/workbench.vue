@@ -126,127 +126,124 @@ import userinfmask from '@/components/userinfoMask'
 import store from '@/store'
 import defaultHead from '@/assets/defaultHead.svg'
 export default {
-    data() {
-        return {
-            isFullscreen: false,//全屏状态
-            infoMaskOpenStatus: false,//用户信息弹层状态
-            menuCompressionStatus: false,//菜单收缩状态
-            search: ''
+  data () {
+    return {
+      isFullscreen: false, // 全屏状态
+      infoMaskOpenStatus: false, // 用户信息弹层状态
+      menuCompressionStatus: false, // 菜单收缩状态
+      search: ''
+    }
+  },
+  methods: {
+    fullscreen () {
+      if (!this.isFullscreen) {
+        this.isFullscreen = true
+        const docElm = document.documentElement
+        if (docElm.requestFullscreen) { // W3C
+          docElm.requestFullscreen()
+        } else if (docElm.mozRequestFullScreen) { // FireFox
+          docElm.mozRequestFullScreen()
+        } else if (docElm.webkitRequestFullScreen) { // Chrome等
+          docElm.webkitRequestFullScreen()
+        } else if (window.elem.msRequestFullscreen) { // IE11
+          window.elem.msRequestFullscreen()
         }
+      } else {
+        this.isFullscreen = false
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        }
+      }
     },
-    methods: {
-        fullscreen() {
-            if (!this.isFullscreen) {
-                this.isFullscreen = true;
-                const docElm = document.documentElement;
-                if (docElm.requestFullscreen) { //W3C
-                    docElm.requestFullscreen();
-                } else if (docElm.mozRequestFullScreen) {//FireFox
-                    docElm.mozRequestFullScreen();
-                } else if (docElm.webkitRequestFullScreen) {//Chrome等
-                    docElm.webkitRequestFullScreen();
-                } else if (elem.msRequestFullscreen) { //IE11
-                    elem.msRequestFullscreen();
-                }
-            } else {
-                this.isFullscreen = false;
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitCancelFullScreen) {
-                    document.webkitCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        },
-        /**
+    /**
          * 获取登录用户信息
          */
-        getUserInfo() {
-            servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
-                if (!result.nickname) {
-                    result.nickname = localStorage.getItem("mobile");
-                }
-                if (!result.headPic) {
-                    result.headPic = defaultHead;
-                }
-                store.commit('setNickName', result.nickname);
-                store.commit('setHeadPic', result.headPic);
-                store.commit('setRealName', result.realname);
-                store.commit('setGender', result.gender);
-            })
-        },
-        // 切换遮罩层
-        openMask() {
-            this.infoMaskOpenStatus ? this.infoMaskOpenStatus = false : this.infoMaskOpenStatus = true;
-        },
-        // 关闭遮罩层
-        hideMask() {
-            this.infoMaskOpenStatus = false;
-        },
-        //隐藏左侧导航菜单
-        compression() {
-            this.menuCompressionStatus ? this.menuCompressionStatus = false : this.menuCompressionStatus = true;
-        },
-        handleOpen(key, keyPath) {
-            // console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-            // console.log(key, keyPath);
+    getUserInfo () {
+      servers.post('/getUserInfo', { id: localStorage.getItem('id') }, (result) => {
+        if (!result.nickname) {
+          result.nickname = localStorage.getItem('mobile')
         }
-    },
-    computed: {
-        breadCrumbs() {
-            // store.commit('increment', {
-            //     amount: 10
-            // })
-            return store.state.breadCrumbs;
-        },
-        nickname() {
-            return store.state.nickname;
-        },
-        headPic() {
-            return store.state.headPic||defaultHead;
+        if (!result.headPic) {
+          result.headPic = defaultHead
         }
+        store.commit('setNickName', result.nickname)
+        store.commit('setHeadPic', result.headPic)
+        store.commit('setRealName', result.realname)
+        store.commit('setGender', result.gender)
+      })
     },
-    created() {
-        const self = this;
-        if (!localStorage.getItem("mobile")) {
-            this.$message.error('会话过期，登录失效，请重新登录！');
-            this.$message({
-                message: '会话过期，登录失效，请重新登录！',
-                type: 'error',
-                duration: 1000,
-                onClose() {
-                    self.$router.push('/login');
-                }
-            });
-
-        } else {
-            // 监听 全屏事件
-            document.addEventListener("fullscreenchange", function () {
-                self.isFullscreen = document.fullscreen;
-            }, false);
-            document.addEventListener("webkitfullscreenchange", function () {
-                self.isFullscreen = document.webkitIsFullScreen;
-            }, false);
-            document.addEventListener("mozfullscreenchange", function () {
-                self.isFullscreen = document.mozFullScreen;
-            }, false);
-            document.addEventListener("msfullscreenchange", function () {
-                self.isFullscreen = document.msFullscreenElement;
-            }, false);
-            this.getUserInfo();
+    // 切换遮罩层
+    openMask () {
+      this.infoMaskOpenStatus ? this.infoMaskOpenStatus = false : this.infoMaskOpenStatus = true
+    },
+    // 关闭遮罩层
+    hideMask () {
+      this.infoMaskOpenStatus = false
+    },
+    // 隐藏左侧导航菜单
+    compression () {
+      this.menuCompressionStatus ? this.menuCompressionStatus = false : this.menuCompressionStatus = true
+    },
+    handleOpen (key, keyPath) {
+      // console.log(key, keyPath);
+    },
+    handleClose (key, keyPath) {
+      // console.log(key, keyPath);
+    }
+  },
+  computed: {
+    breadCrumbs () {
+      // store.commit('increment', {
+      //     amount: 10
+      // })
+      return store.state.breadCrumbs
+    },
+    nickname () {
+      return store.state.nickname
+    },
+    headPic () {
+      return store.state.headPic || defaultHead
+    }
+  },
+  created () {
+    const self = this
+    if (!localStorage.getItem('mobile')) {
+      this.$message.error('会话过期，登录失效，请重新登录！')
+      this.$message({
+        message: '会话过期，登录失效，请重新登录！',
+        type: 'error',
+        duration: 1000,
+        onClose () {
+          self.$router.push('/login')
         }
-    },
-    components: { userinfmask }
+      })
+    } else {
+      // 监听 全屏事件
+      document.addEventListener('fullscreenchange', function () {
+        self.isFullscreen = document.fullscreen
+      }, false)
+      document.addEventListener('webkitfullscreenchange', function () {
+        self.isFullscreen = document.webkitIsFullScreen
+      }, false)
+      document.addEventListener('mozfullscreenchange', function () {
+        self.isFullscreen = document.mozFullScreen
+      }, false)
+      document.addEventListener('msfullscreenchange', function () {
+        self.isFullscreen = document.msFullscreenElement
+      }, false)
+      this.getUserInfo()
+    }
+  },
+  components: { userinfmask }
 }
 </script>
 <style scoped lang="scss">
 @import '../sass/common';
 @import '../sass/workbench';
 </style>
-
-
