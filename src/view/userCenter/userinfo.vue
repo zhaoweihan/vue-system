@@ -32,7 +32,7 @@
 </template>
 <script>
 import store from '@/store'
-import { servers } from '@/api'
+import { servers } from '@/service/api'
 import defaultHead from '@/assets/defaultHead2.svg'
 export default {
   data () {

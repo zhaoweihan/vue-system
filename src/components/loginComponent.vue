@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-import { servers } from '../api.js'
+import { servers } from '../service/api'
 export default {
   data () {
     // 手机号

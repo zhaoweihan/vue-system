@@ -48,7 +48,7 @@
 </template>
 <script>
 import store from '@/store'
-import { servers } from '@/api'
+import { servers } from '@/service/api'
 export default {
   data () {
     return {

@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-import { servers } from '../../../api'
+import { servers } from '@/service/api'
 import store from '@/store'
 export default {
   data () {

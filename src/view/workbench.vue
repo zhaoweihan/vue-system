@@ -121,7 +121,7 @@
     </div>
 </template>
 <script>
-import { servers } from '@/api'
+import { servers } from '@/service/api'
 import userinfmask from '@/components/userinfoMask'
 import store from '@/store'
 import defaultHead from '@/assets/defaultHead.svg'
