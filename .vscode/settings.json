@@ -1,3 +1,8 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "jumpToAliasFile.alias": {
+        "vue$": "vue/dist/vue.esm.js",
+        "@": "/Users/bjhl/my-project/vue-system/src",
+        "font-awesome": "font-awesome/css/font-awesome.min.css"
+    }
 }
