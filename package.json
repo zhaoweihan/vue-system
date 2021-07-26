@@ -9,6 +9,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@eva/eva.js": "^1.0.7",
+    "@eva/plugin-renderer": "^1.0.7",
+    "@eva/plugin-renderer-img": "^1.0.7",
+    "@eva/plugin-renderer-mask": "^1.0.7",
+    "@eva/plugin-sound": "^1.0.7",
+    "@eva/plugin-stats": "^1.0.7",
+    "@eva/plugin-transition": "^1.0.7",
     "element-ui": "^1.3.4",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1"

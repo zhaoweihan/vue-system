@@ -13,7 +13,6 @@ Vue.use(Router)
 export default new Router({
   routes: [{
     path: '/',
-    name: 'workbench',
     component: workbench,
     children: [{
       path: '/dailywork/checkinManagement', // 入住评估列表
@@ -40,5 +39,13 @@ export default new Router({
     path: '/login',
     name: 'login',
     component: login
+  }, {
+    path: '/eva',
+    name: 'eva',
+    component: () => import('@/view/Eva.vue')
+  }, {
+    path: '/chooseimage',
+    name: 'chooseimage',
+    component: () => import('@/view/ChooseImage.vue')
   }]
 })
